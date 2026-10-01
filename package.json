@@ -1,0 +1,21 @@
+{
+  "name": "missed-call-textback",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js && node test-ai.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1",
+    "luxon": "^3.7.2",
+    "mongodb": "^7.7.0",
+    "twilio": "^6.1.1",
+    "ws": "^8.21.3"
+  }
+}

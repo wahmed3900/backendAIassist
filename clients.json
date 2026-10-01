@@ -1,0 +1,24 @@
+{
+  "+15550001111": {
+    "name": "ABC Heating & Air",
+    "ownerPhone": "+15559998888",
+    "ringSeconds": 20,
+    "textBackMessage": "Hi, this is ABC Heating & Air! Sorry we missed your call. How can we help? Reply here and we'll get right back to you.",
+
+    "aiMode": "after-missed",
+    "aiGreeting": "Thanks for calling ABC Heating and Air! How can I help you today?",
+    "about": "Family-owned HVAC company. Service call fee is $89, waived if you go ahead with the repair.",
+    "services": ["AC repair", "Furnace repair", "Maintenance tune-up", "New system estimate"],
+    "serviceArea": "Detroit and surrounding suburbs",
+    "timezone": "America/Detroit",
+    "slotMinutes": 120,
+    "hours": {
+      "mon": ["08:00", "18:00"],
+      "tue": ["08:00", "18:00"],
+      "wed": ["08:00", "18:00"],
+      "thu": ["08:00", "18:00"],
+      "fri": ["08:00", "18:00"],
+      "sat": ["09:00", "13:00"]
+    }
+  }
+}
