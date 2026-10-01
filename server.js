@@ -169,7 +169,10 @@ app.get('/', (_, res) => res.send('Missed-call text-back + AI receptionist is ru
 // WebSocket for the AI receptionist
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: '/relay' });
-wss.on('connection', (ws) => handleSession(ws, { getBiz, sendSms }));
+wss.on('connection', (ws) => {
+  console.log('>>> WebSocket /relay connected');
+  handleSession(ws, { getBiz, sendSms });
+});
 
 if (require.main === module) {
   server.listen(PORT, () => console.log(`Listening on ${PORT}`));
