@@ -10,6 +10,10 @@ const { handleSession } = require('./receptionist');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  console.log(`>>> ${req.method} ${req.originalUrl} | To=${req.body?.To} From=${req.body?.From}`);
+  next();
+});
 
 const {
   TWILIO_ACCOUNT_SID,
