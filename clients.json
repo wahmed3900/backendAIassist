@@ -5,7 +5,7 @@
     "ringSeconds": 20,
     "textBackMessage": "Hi, this is ABC Heating & Air! Sorry we missed your call. How can we help? Reply here and we'll get right back to you.",
 
-    "aiMode": "after-missed",
+    "aiMode": "always",
     "aiGreeting": "Thanks for calling ABC Heating and Air! How can I help you today?",
     "about": "Family-owned HVAC company. Service call fee is $89, waived if you go ahead with the repair.",
     "services": ["AC repair", "Furnace repair", "Maintenance tune-up", "New system estimate"],
