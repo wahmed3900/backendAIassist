@@ -7,6 +7,7 @@ const twilio = require('twilio');
 const { WebSocketServer } = require('ws');
 const fs = require('fs');
 const { handleSession } = require('./receptionist');
+const outreach = require('./outreach');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -18,9 +19,9 @@ app.use((req, res, next) => {
 const {
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
-  PUBLIC_URL = '',          // e.g. https://your-app.onrender.com
+  PUBLIC_URL = '', // e.g. https://your-app.onrender.com
   PORT = 3000,
-  SKIP_SIGNATURE_CHECK,     // "true" only for local testing
+  SKIP_SIGNATURE_CHECK, // "true" only for local testing
 } = process.env;
 
 const client = TWILIO_ACCOUNT_SID ? twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN) : null;
@@ -62,9 +63,6 @@ function connectAI(twiml, biz) {
 }
 
 // 1) Incoming call
-//    aiMode "always"       -> AI answers every call
-//    aiMode "after-missed" -> ring the owner first; AI picks up if they don't
-//    no aiMode             -> ring the owner; text back if missed
 app.post('/voice', verifyTwilio, (req, res) => {
   const biz = getBiz(req.body.To);
   const twiml = new VoiceResponse();
@@ -88,13 +86,13 @@ app.post('/call-status', verifyTwilio, async (req, res) => {
   if (biz && DialCallStatus !== 'completed') {
     if (biz.aiMode === 'after-missed') {
       connectAI(twiml, biz);
-            try {
-                      await sendSms(To, From, biz.textBackMessage);
-                      await sendSms(To, biz.ownerPhone, `Missed call from ${From}. AI receptionist is handling it.`);
-                      lastCustomer[To] = From;
-            } catch (e) {
-                      console.error('SMS error:', e.message);
-            }
+      try {
+        await sendSms(To, From, biz.textBackMessage);
+        await sendSms(To, biz.ownerPhone, `Missed call from ${From}. AI receptionist is handling it.`);
+        lastCustomer[To] = From;
+      } catch (e) {
+        console.error('SMS error:', e.message);
+      }
       console.log(`[${biz.name}] missed call from ${From} -> AI receptionist`);
     } else {
       twiml.say(`Sorry we missed your call. We'll text you right away.`);
@@ -114,7 +112,7 @@ app.post('/call-status', verifyTwilio, async (req, res) => {
   res.type('text/xml').send(twiml.toString());
 });
 
-// 3) AI conversation ended: transfer to the owner or hang up
+// 3) AI conversation ended
 app.post('/relay-end', verifyTwilio, (req, res) => {
   const biz = getBiz(req.body.To);
   const twiml = new VoiceResponse();
@@ -122,7 +120,6 @@ app.post('/relay-end', verifyTwilio, (req, res) => {
   try { handoff = JSON.parse(req.body.HandoffData || '{}'); } catch {}
 
   if (biz && handoff.reason === 'transfer') {
-    // If the owner doesn't answer the transfer, fall back to text-back
     const dial = twiml.dial({ timeout: biz.ringSeconds || 20, callerId: req.body.From });
     dial.number(biz.ownerPhone);
     sendSms(req.body.To, biz.ownerPhone, `AI is transferring a caller to you: ${req.body.From}. Reason: ${handoff.detail || 'n/a'}`).catch(() => {});
@@ -133,10 +130,7 @@ app.post('/relay-end', verifyTwilio, (req, res) => {
   res.type('text/xml').send(twiml.toString());
 });
 
-// 4) Texts to the business number:
-//    - from a customer -> forward to the owner
-//    - from the owner  -> send to the last customer
-//      (or to a specific one by starting with their number: "+15551234567 On our way!")
+// 4) Texts to the business number
 app.post('/sms', verifyTwilio, async (req, res) => {
   const { To, From, Body = '' } = req.body;
   const biz = getBiz(To);
@@ -159,7 +153,7 @@ app.post('/sms', verifyTwilio, async (req, res) => {
   res.type('text/xml').send(new MessagingResponse().toString());
 });
 
-// Owner can see upcoming bookings: /bookings?key=YOUR_ADMIN_KEY
+// Owner can see upcoming bookings
 app.get('/bookings', async (req, res) => {
   if (!process.env.ADMIN_KEY || req.query.key !== process.env.ADMIN_KEY) return res.status(403).send('Forbidden');
   try {
@@ -172,6 +166,81 @@ app.get('/bookings', async (req, res) => {
 });
 
 app.get('/', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+
+// ─── OUTREACH ROUTES ────────────────────────────────────────────────────────
+
+// POST /outreach — send SMS now, schedule AI call after delay_hours
+app.post('/outreach', async (req, res) => {
+  const { phone, delay_hours = 24, skip_if_contacted = 'true' } = req.body;
+  if (!phone) return res.status(400).json({ error: 'phone is required' });
+
+  if (skip_if_contacted === 'true' && outreach.alreadyContacted(phone)) {
+    return res.json({ status: 'already_contacted', phone });
+  }
+
+  const biz = Object.values(clients)[0];
+  const fromNumber = biz.twilioNumber;
+
+  try {
+    const smsSid = await outreach.smsProspect(client, fromNumber, phone, biz.name);
+    console.log(`[Outreach] SMS sent to ${phone}, sid=${smsSid}`);
+
+    const delayMs = parseFloat(delay_hours) * 60 * 60 * 1000;
+    setTimeout(async () => {
+      try {
+        const callSid = await outreach.callProspect(client, fromNumber, phone, PUBLIC_URL);
+        console.log(`[Outreach] Call to ${phone} started, sid=${callSid}`);
+      } catch (e) {
+        console.error(`[Outreach] Call to ${phone} failed:`, e.message);
+      }
+    }, delayMs);
+
+    res.json({ status: 'outreach_started', phone, smsSid, call_in_hours: delay_hours });
+  } catch (e) {
+    console.error('[Outreach] Error:', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET|POST /outreach-twiml — TwiML for the outbound AI sales call
+app.all('/outreach-twiml', (req, res) => {
+  const biz = Object.values(clients)[0];
+  const twiml = new VoiceResponse();
+  const connect = twiml.connect({ action: '/relay-end' });
+  connect.conversationRelay({
+    url: PUBLIC_URL.replace(/^http/, 'ws') + '/relay',
+    welcomeGreeting:
+      `Hi there! I'm calling from ${biz.name}. ` +
+      `We help local businesses never miss a sales call — our AI answers when you're busy ` +
+      `and automatically texts back missed callers. We also do professional website redesigns. ` +
+      `Is this a good time to hear more? Just say yes or no.`,
+    ...(biz.aiVoice ? { voice: biz.aiVoice } : {}),
+  });
+  res.type('text/xml').send(twiml.toString());
+});
+
+// POST /outreach-status — Twilio posts here when an outbound call ends
+app.post('/outreach-status', (req, res) => {
+  const { To, CallStatus } = req.body;
+  console.log(`[Outreach] Call to ${To} ended: ${CallStatus}`);
+  const log = outreach.loadLog();
+  if (log[To]) {
+    log[To].call_status = CallStatus;
+    log[To].call_updated_at = new Date().toISOString();
+    outreach.saveLog(log);
+  }
+  res.sendStatus(200);
+});
+
+// GET /outreach-log — view all contacts (requires ADMIN_KEY)
+app.get('/outreach-log', (req, res) => {
+  if (!process.env.ADMIN_KEY || req.query.key !== process.env.ADMIN_KEY) {
+    return res.status(403).send('Forbidden');
+  }
+  res.json(outreach.loadLog());
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 // WebSocket for the AI receptionist
 const server = http.createServer(app);
