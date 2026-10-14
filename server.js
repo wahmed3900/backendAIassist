@@ -88,6 +88,13 @@ app.post('/call-status', verifyTwilio, async (req, res) => {
   if (biz && DialCallStatus !== 'completed') {
     if (biz.aiMode === 'after-missed') {
       connectAI(twiml, biz);
+            try {
+                      await sendSms(To, From, biz.textBackMessage);
+                      await sendSms(To, biz.ownerPhone, `Missed call from ${From}. AI receptionist is handling it.`);
+                      lastCustomer[To] = From;
+            } catch (e) {
+                      console.error('SMS error:', e.message);
+            }
       console.log(`[${biz.name}] missed call from ${From} -> AI receptionist`);
     } else {
       twiml.say(`Sorry we missed your call. We'll text you right away.`);
