@@ -1,24 +1,22 @@
 {
   "+19163138648": {
-    "name": "ABC Heating & Air",
+    "name": "AI Web Tool Service",
     "ownerPhone": "+12792836339",
     "ringSeconds": 20,
-    "textBackMessage": "Hi, this is ABC Heating & Air! Sorry we missed your call. How can we help? Reply here and we'll get right back to you.",
-
-    "aiMode" "after-missed",
-    "aiGreeting": "Thanks for calling ABC Heating and Air! How can I help you today?",
-    "about": "Family-owned HVAC company. Service call fee is $89, waived if you go ahead with the repair.",
-    "services": ["AC repair", "Furnace repair", "Maintenance tune-up", "New system estimate"],
-    "serviceArea": "Detroit and surrounding suburbs",
-    "timezone": "America/Detroit",
-    "slotMinutes": 120,
+    "textBackMessage": "Hi, this is AI Web Tool Service! Sorry we missed your call. We offer AI missed call handling and website redesigns. Reply here and we'll get right back to you.",
+    "aiMode": "after-missed",
+    "aiGreeting": "Thanks for calling AI Web Tool Service! We help businesses with AI-powered missed call handling and professional website redesigns. How can I help you today?",
+    "about": "AI Web Tool Service helps small businesses never miss a lead. We offer AI receptionist setup and full website redesigns.",
+    "services": ["AI missed call handling", "Website redesign", "AI receptionist setup", "Digital presence audit"],
+    "serviceArea": "Sacramento and surrounding areas",
+    "timezone": "America/Los_Angeles",
+    "slotMinutes": 60,
     "hours": {
-      "mon": ["08:00", "18:00"],
-      "tue": ["08:00", "18:00"],
-      "wed": ["08:00", "18:00"],
-      "thu": ["08:00", "18:00"],
-      "fri": ["08:00", "18:00"],
-      "sat": ["09:00", "13:00"]
+      "mon": ["09:00", "18:00"],
+      "tue": ["09:00", "18:00"],
+      "wed": ["09:00", "18:00"],
+      "thu": ["09:00", "18:00"],
+      "fri": ["09:00", "17:00"]
     }
   }
 }
