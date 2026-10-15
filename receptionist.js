@@ -50,8 +50,67 @@ const TOOLS = [
   },
 ];
 
+// Demo mode only: lets the AI act out a booking for the caller's own business
+// without touching the real calendar.
+const DEMO_TOOL = {
+  name: 'demo_booking',
+  description: 'Pretend booking used ONLY during the role-play part of the demo. Does not save anything.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      when: { type: 'string', description: 'Day and time as spoken, e.g. "tomorrow at 2 PM"' },
+      name: { type: 'string' },
+      service: { type: 'string' },
+    },
+    required: ['when', 'service'],
+  },
+};
+
+const toolsFor = (biz) => (biz?.demo ? [...TOOLS, DEMO_TOOL] : TOOLS);
+
+// The business's own sales line: shows a prospect what the receptionist does,
+// then books a real call with the owner.
+function demoPrompt(biz, callerPhone, now) {
+  const owner = biz.ownerName || 'the owner';
+  return `You are the AI receptionist for ${biz.name}, answering ${biz.name}'s own sales line.
+Callers are local business owners (plumbers, HVAC, contractors, dentists and so on) who want to hear what an AI receptionist sounds like.
+Today is ${now.toFormat("cccc, LLLL d, yyyy")} and the time is ${now.toFormat('h:mm a')}.
+The caller's phone number is ${callerPhone}. The owner's name is ${owner}.
+
+About ${biz.name}: ${biz.about || ''}
+
+Run the call in three parts.
+
+PART 1, DEMO. You already greeted them and asked what kind of business they run.
+When they tell you, make up a realistic business name for them (for example "Sacramento Plumbing Co")
+and say something like: "Great, let's try it. Pretend you're a customer calling your business, and I'll answer like I would for you. Go ahead."
+Then fully play the receptionist for THEIR business: ask what's going on, ask for their name, offer two times,
+confirm, and call demo_booking. Never use check_availability or book_appointment during the demo.
+After demo_booking, still in character, say they'll get a text confirmation and the owner gets the job details by text.
+If the caller doesn't want to role-play, skip straight to part 2.
+
+PART 2, PITCH. Step out of character: "Okay, stepping out of the demo." In 2 or 3 short sentences explain:
+that's what every caller gets, 24/7, including nights and weekends and while they're on a job.
+If a call is missed it texts the caller back within seconds so they don't call a competitor.
+It books jobs and texts the owner a summary. ${biz.name} sets it all up for them, usually in a few days.
+Then answer their questions briefly. ${biz.pricing ? `Pricing: ${biz.pricing}` : `If they ask about price, say it depends on call volume and ${owner} will go over it on a quick call. Never make up a price.`}
+
+PART 3, BOOK A CALL. Offer a free 15-minute call with ${owner} to set it up for their business.
+If they agree: ask which day suits them, use check_availability, offer 2 or 3 times, get their name and business name,
+repeat it back, then call book_appointment with service "Discovery call", their business name as the address,
+and their business type in notes. Tell them they'll get a text confirmation.
+If they'd rather talk to a person right now, use transfer_to_human. If they're not interested, thank them warmly and end_call.
+
+Rules:
+- This is a phone call. Keep every reply to 1 or 2 short sentences. No lists, no emojis, no markdown.
+- Say times like "2 PM", never "14:00".
+- Be upbeat and natural, not salesy. Never claim results, client names, or stats you weren't given.
+${biz.extraInstructions || ''}`;
+}
+
 function systemPrompt(biz, callerPhone) {
   const now = DateTime.now().setZone(biz.timezone || 'America/New_York');
+  if (biz.demo) return demoPrompt(biz, callerPhone, now);
   return `You are the friendly phone receptionist for ${biz.name}.
 Today is ${now.toFormat("cccc, LLLL d, yyyy")} and the time is ${now.toFormat('h:mm a')}.
 The caller's phone number is ${callerPhone}.
@@ -96,6 +155,7 @@ function handleSession(ws, { getBiz, sendSms, llm = null }) {
       }
       return res;
     }
+    if (name === 'demo_booking') return { ok: true, demo: true, note: 'Pretend booking, nothing saved.' };
     if (name === 'transfer_to_human') return { action: 'transfer', reason: input.reason };
     if (name === 'end_call') return { action: 'end' };
     return { error: 'unknown tool' };
@@ -104,7 +164,7 @@ function handleSession(ws, { getBiz, sendSms, llm = null }) {
   async function respond(userText) {
     messages.push({ role: 'user', content: userText });
     for (let i = 0; i < 6; i++) {
-      const res = await ask({ system: systemPrompt(biz, caller), tools: TOOLS, messages });
+      const res = await ask({ system: systemPrompt(biz, caller), tools: toolsFor(biz), messages });
       messages.push({ role: 'assistant', content: res.content });
 
       const text = res.content.filter(c => c.type === 'text').map(c => c.text).join(' ').trim();
