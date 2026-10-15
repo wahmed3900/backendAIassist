@@ -170,7 +170,14 @@ app.get('/', (_, res) => res.send('Missed-call text-back + AI receptionist is ru
 // ─── OUTREACH ROUTES ────────────────────────────────────────────────────────
 
 // POST /outreach — send SMS now, schedule AI call after delay_hours
-app.post('/outreach', async (req, res) => {
+// Only the owner may start outreach: requires ADMIN_KEY (header x-admin-key or body "key").
+function requireAdmin(req, res, next) {
+  const key = req.get('x-admin-key') || (req.body && req.body.key);
+  if (!process.env.ADMIN_KEY || key !== process.env.ADMIN_KEY) return res.status(403).send('Forbidden');
+  next();
+}
+
+app.post('/outreach', requireAdmin, async (req, res) => {
   const { phone, delay_hours = 24, skip_if_contacted = 'true' } = req.body;
   if (!phone) return res.status(400).json({ error: 'phone is required' });
 
@@ -220,7 +227,7 @@ app.all('/outreach-twiml', (req, res) => {
 });
 
 // POST /outreach-status — Twilio posts here when an outbound call ends
-app.post('/outreach-status', (req, res) => {
+app.post('/outreach-status', verifyTwilio, (req, res) => {
   const { To, CallStatus } = req.body;
   console.log(`[Outreach] Call to ${To} ended: ${CallStatus}`);
   const log = outreach.loadLog();

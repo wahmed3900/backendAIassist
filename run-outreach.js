@@ -11,9 +11,10 @@
 // Options:
 //   delay_hours  — hours before the follow-up AI call fires (default 24)
 //   SERVER_URL   — env var pointing to your server (default http://localhost:3000)
+//   ADMIN_KEY    — env var, must match the server's ADMIN_KEY (required)
 //
 // Example:
-//   SERVER_URL=https://your-app.onrender.com node run-outreach.js leads.json 4
+//   ADMIN_KEY=... SERVER_URL=https://your-app.onrender.com node run-outreach.js leads.json 4
 
 const https = require('https');
 const http  = require('http');
@@ -22,6 +23,11 @@ const fs    = require('fs');
 const leadsFile  = process.argv[2] || 'leads.json';
 const delayHours = parseFloat(process.argv[3] || '24');
 const SERVER_URL = process.env.SERVER_URL || 'http://localhost:3000';
+const ADMIN_KEY  = process.env.ADMIN_KEY;
+if (!ADMIN_KEY) {
+  console.error('Set ADMIN_KEY (same value as on the server) before running outreach.');
+  process.exit(1);
+}
 const PAUSE_MS   = 2500; // pause between sends to avoid Twilio rate limits
 
 if (!fs.existsSync(leadsFile)) {
@@ -45,6 +51,7 @@ function post(url, data) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'x-admin-key': ADMIN_KEY,
           'Content-Length': Buffer.byteLength(body),
         },
       },
