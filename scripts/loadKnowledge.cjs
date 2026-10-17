@@ -9,7 +9,6 @@ async function main() {
 
   console.log(`Checking/creating Pinecone index: ${indexName}`);
 
-  // 1. List existing indexes
   const existing = await pc.listIndexes();
   const indexExists = existing.indexes?.some((idx) => idx.name === indexName);
 
@@ -32,31 +31,65 @@ async function main() {
     console.log(`Index '${indexName}' already exists.`);
   }
 
-  // 2. Read knowledge file
-  const file = path.join(__dirname, '..', 'knowledge', 'acme-hvac.md');
-  if (!fs.existsSync(file)) {
-    console.error(`File not found: ${file}`);
+  const knowledgeDir = path.join(__dirname, '..', 'knowledge');
+  if (!fs.existsSync(knowledgeDir)) {
+    console.error(`Knowledge directory not found: ${knowledgeDir}`);
     process.exit(1);
   }
 
-  const sections = fs.readFileSync(file, 'utf8').split('\n## ').slice(1);
-  console.log(`Found ${sections.length} sections to process.`);
+  function getMarkdownFiles(dir) {
+    let results = [];
+    const list = fs.readdirSync(dir, { withFileTypes: true });
+    for (const file of list) {
+      const fullPath = path.join(dir, file.name);
+      if (file.isDirectory()) {
+        results = results.concat(getMarkdownFiles(fullPath));
+      } else if (file.name.endsWith('.md')) {
+        results.push(fullPath);
+      }
+    }
+    return results;
+  }
 
-  // 3. Prepare records
-  const records = sections.map((section, i) => ({
-    id: `acme-hvac-${i}`,
-    values: new Array(1024).fill(0.1), // Standard vector embedding array
-    metadata: {
-      text: `Acme HVAC - ${section.trim()}`,
-      source: 'acme-hvac.md',
-    },
-  }));
+  const files = getMarkdownFiles(knowledgeDir);
+  console.log(`Found ${files.length} knowledge file(s).`);
 
-  // 4. Upsert into targeted namespace
   const index = pc.index(indexName);
-  await index.namespace('acme-hvac').upsert(records);
 
-  console.log(`Successfully loaded ${records.length} chunks into Pinecone under namespace 'acme-hvac'.`);
+  for (const file of files) {
+    const content = fs.readFileSync(file, 'utf8').trim();
+    
+    // Skip empty files safely
+    if (!content) {
+      console.log(`Skipping empty file: ${path.relative(knowledgeDir, file)}`);
+      continue;
+    }
+
+    // Split by markdown headings or fall back to full content
+    let sections = content.split(/\n(?=#+\s)/).map((s) => s.trim()).filter(Boolean);
+    if (sections.length === 0) {
+      sections = [content];
+    }
+
+    const relativeName = path.relative(knowledgeDir, file);
+
+    const records = sections.map((section, i) => ({
+      id: `${relativeName.replace(/[^a-zA-Z0-9]/g, '-')}-${i}`,
+      values: new Array(1024).fill(0.1),
+      metadata: {
+        text: section,
+        source: relativeName,
+      },
+    }));
+
+    // Prevent passing empty arrays to Pinecone upsert
+    if (records.length > 0) {
+      await index.namespace('acme-hvac').upsert(records);
+      console.log(`Successfully loaded ${records.length} chunks from '${relativeName}' into Pinecone.`);
+    }
+  }
+
+  console.log('All knowledge loading complete!');
 }
 
 main().catch((err) => {
