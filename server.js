@@ -181,7 +181,8 @@ app.post('/outreach', requireAdmin, async (req, res) => {
   const { phone, delay_hours = 24, skip_if_contacted = 'true' } = req.body;
   if (!phone) return res.status(400).json({ error: 'phone is required' });
 
-  if (skip_if_contacted === 'true' && outreach.alreadyContacted(phone)) {
+  // FIX: await because alreadyContacted() is now async (uses MongoDB)
+  if (skip_if_contacted === 'true' && await outreach.alreadyContacted(phone)) {
     return res.json({ status: 'already_contacted', phone });
   }
 
@@ -227,24 +228,29 @@ app.all('/outreach-twiml', (req, res) => {
 });
 
 // POST /outreach-status — Twilio posts here when an outbound call ends
-app.post('/outreach-status', verifyTwilio, (req, res) => {
+// FIX: made async, uses MongoDB via loadLog() to update call status
+app.post('/outreach-status', verifyTwilio, async (req, res) => {
   const { To, CallStatus } = req.body;
   console.log(`[Outreach] Call to ${To} ended: ${CallStatus}`);
-  const log = outreach.loadLog();
-  if (log[To]) {
-    log[To].call_status = CallStatus;
-    log[To].call_updated_at = new Date().toISOString();
-    outreach.saveLog(log);
+  try {
+    const db = await outreach.getDb();
+    await db.collection('outreach_log').updateOne(
+      { phone: To },
+      { $set: { call_status: CallStatus, call_updated_at: new Date().toISOString() } }
+    );
+  } catch (e) {
+    console.error('[Outreach] Status update error:', e.message);
   }
   res.sendStatus(200);
 });
 
 // GET /outreach-log — view all contacts (requires ADMIN_KEY)
-app.get('/outreach-log', (req, res) => {
+// FIX: made async, await loadLog() which now reads from MongoDB
+app.get('/outreach-log', async (req, res) => {
   if (!process.env.ADMIN_KEY || req.query.key !== process.env.ADMIN_KEY) {
     return res.status(403).send('Forbidden');
   }
-  res.json(outreach.loadLog());
+  res.json(await outreach.loadLog());
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
