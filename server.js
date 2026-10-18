@@ -167,6 +167,23 @@ app.get('/bookings', async (req, res) => {
 
 app.get('/', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
 
+// ─── KEEP-ALIVE PING (prevents Render free tier from sleeping) ───────────────
+// Pings itself every 10 minutes so the server never spins down.
+if (PUBLIC_URL) {
+  const PING_INTERVAL = 10 * 60 * 1000; // 10 minutes
+  const pingUrl = PUBLIC_URL + '/';
+  setInterval(() => {
+    const mod = pingUrl.startsWith('https') ? require('https') : require('http');
+    mod.get(pingUrl, (res) => {
+      console.log(`[KeepAlive] ping ${res.statusCode}`);
+    }).on('error', (e) => {
+      console.error('[KeepAlive] ping failed:', e.message);
+    });
+  }, PING_INTERVAL);
+  console.log(`[KeepAlive] pinging ${pingUrl} every 10 min`);
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ─── OUTREACH ROUTES ────────────────────────────────────────────────────────
 
 // POST /outreach — send SMS now, schedule AI call after delay_hours
