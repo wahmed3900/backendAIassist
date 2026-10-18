@@ -1,21 +1,26 @@
 // outreach.js — Outbound SMS + AI call prospecting for AI Web Tool Service
-const fs = require('fs');
-const path = require('path');
+// Uses MongoDB for contacted tracking (replaces outreach-log.json which resets on Render restarts)
 
-const LOG_FILE = path.join(__dirname, 'outreach-log.json');
+const { MongoClient } = require('mongodb');
 
-function loadLog() {
-  try { return JSON.parse(fs.readFileSync(LOG_FILE, 'utf8')); } catch { return {}; }
-}
+const MONGO_URI = process.env.MONGODB_URI;
+let _db = null;
 
-function saveLog(log) {
-  fs.writeFileSync(LOG_FILE, JSON.stringify(log, null, 2));
+async function getDb() {
+  if (_db) return _db;
+  const client = new MongoClient(MONGO_URI);
+  await client.connect();
+  _db = client.db(); // uses DB name from the URI
+  // Ensure unique index so we never double-insert
+  await _db.collection('outreach_log').createIndex({ phone: 1 }, { unique: true });
+  return _db;
 }
 
 // Have we already texted this number?
-function alreadyContacted(toPhone) {
-  const log = loadLog();
-  return !!(log[toPhone] && log[toPhone].sms_sent_at);
+async function alreadyContacted(toPhone) {
+  const db = await getDb();
+  const record = await db.collection('outreach_log').findOne({ phone: toPhone });
+  return !!(record && record.sms_sent_at);
 }
 
 // Send an outbound SMS pitch
@@ -27,11 +32,12 @@ async function smsProspect(client, fromNumber, toPhone, bizName) {
 
   const msg = await client.messages.create({ from: fromNumber, to: toPhone, body });
 
-  const log = loadLog();
-  log[toPhone] = log[toPhone] || {};
-  log[toPhone].sms_sent_at = new Date().toISOString();
-  log[toPhone].sms_sid = msg.sid;
-  saveLog(log);
+  const db = await getDb();
+  await db.collection('outreach_log').updateOne(
+    { phone: toPhone },
+    { $set: { sms_sent_at: new Date().toISOString(), sms_sid: msg.sid } },
+    { upsert: true }
+  );
 
   return msg.sid;
 }
@@ -46,13 +52,31 @@ async function callProspect(client, fromNumber, toPhone, publicUrl) {
     statusCallbackMethod: 'POST',
   });
 
-  const log = loadLog();
-  log[toPhone] = log[toPhone] || {};
-  log[toPhone].call_started_at = new Date().toISOString();
-  log[toPhone].call_sid = call.sid;
-  saveLog(log);
+  const db = await getDb();
+  await db.collection('outreach_log').updateOne(
+    { phone: toPhone },
+    { $set: { call_started_at: new Date().toISOString(), call_sid: call.sid } },
+    { upsert: true }
+  );
 
   return call.sid;
 }
 
-module.exports = { smsProspect, callProspect, alreadyContacted, loadLog, saveLog };
+// Load full log (used by /outreach-log route in server.js)
+async function loadLog() {
+  const db = await getDb();
+  const records = await db.collection('outreach_log').find({}).toArray();
+  // Return in same shape as the old JSON file so server.js doesn't break
+  const log = {};
+  for (const r of records) {
+    log[r.phone] = {
+      sms_sent_at: r.sms_sent_at,
+      sms_sid: r.sms_sid,
+      call_started_at: r.call_started_at,
+      call_sid: r.call_sid,
+    };
+  }
+  return log;
+}
+
+module.exports = { smsProspect, callProspect, alreadyContacted, loadLog, getDb };
