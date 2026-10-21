@@ -6,15 +6,40 @@ const express = require('express');
 const twilio = require('twilio');
 const { WebSocketServer } = require('ws');
 const fs = require('fs');
+const path = require('path');
 const { handleSession } = require('./receptionist');
 const outreach = require('./outreach');
+const billing = require('./billing');
 
 const app = express();
-app.use(express.urlencoded({ extended: false }));
+// Stripe needs the unmodified body to verify its webhook signature.
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json', limit: '1mb' }), async (req, res) => {
+  try {
+    await billing.handleWebhook(req.body, req.get('stripe-signature'));
+    res.sendStatus(200);
+  } catch (e) {
+    console.error('[Stripe webhook] Processing failed:', e.message);
+    const invalidSignature = /signature|missing stripe webhook/i.test(e.message);
+    res.status(invalidSignature ? 400 : 500).send('Webhook processing failed.');
+  }
+});
+
+app.use(express.json({ limit: '16kb' }));
+app.use(express.urlencoded({ extended: false, limit: '16kb' }));
+app.use((_, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com"
+  );
+  next();
+});
 app.use((req, res, next) => {
   console.log(`>>> ${req.method} ${req.originalUrl} | To=${req.body?.To} From=${req.body?.From}`);
   next();
 });
+app.use(express.static(path.join(__dirname, 'public')));
 
 const {
   TWILIO_ACCOUNT_SID,
@@ -165,7 +190,40 @@ app.get('/bookings', async (req, res) => {
   }
 });
 
-app.get('/', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+app.get('/health', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+
+const checkoutAttempts = new Map();
+function allowCheckout(ip) {
+  const now = Date.now();
+  const recent = (checkoutAttempts.get(ip) || []).filter((time) => now - time < 15 * 60 * 1000);
+  if (recent.length >= 8) return false;
+  recent.push(now);
+  checkoutAttempts.set(ip, recent);
+  return true;
+}
+
+app.post('/api/create-checkout-session', async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+    return res.status(400).json({ error: 'Enter a valid email address.' });
+  }
+  if (!allowCheckout(req.ip)) {
+    return res.status(429).json({ error: 'Too many attempts. Please try again shortly.' });
+  }
+
+  try {
+    const session = await billing.createCheckoutSession(email);
+    if (!session.url) throw new Error('Stripe did not return a checkout URL.');
+    res.json({ url: session.url });
+  } catch (e) {
+    console.error('[Stripe checkout] Session creation failed:', e.message);
+    const status = e.statusCode || 502;
+    const message = status === 503
+      ? 'Checkout is not configured yet. Please contact us to start your trial.'
+      : 'Checkout could not be opened. Please try again or contact us.';
+    res.status(status).json({ error: message });
+  }
+});
 
 // ─── KEEP-ALIVE PING (prevents Render free tier from sleeping) ───────────────
 // Pings itself every 10 minutes so the server never spins down.
@@ -198,29 +256,47 @@ app.post('/outreach', requireAdmin, async (req, res) => {
   const { phone, delay_hours = 24, skip_if_contacted = 'true' } = req.body;
   if (!phone) return res.status(400).json({ error: 'phone is required' });
 
-  // FIX: await because alreadyContacted() is now async (uses MongoDB)
-  if (skip_if_contacted === 'true' && await outreach.alreadyContacted(phone)) {
-    return res.json({ status: 'already_contacted', phone });
+  const delayHours = Number(delay_hours);
+  if (!Number.isFinite(delayHours) || delayHours < 0) {
+    return res.status(400).json({ error: 'delay_hours must be a non-negative number' });
   }
 
   const biz = Object.values(clients)[0];
+  if (!biz) return res.status(500).json({ error: 'No business is configured' });
   const fromNumber = biz.twilioNumber;
 
   try {
-    const smsSid = await outreach.smsProspect(client, fromNumber, phone, biz.name);
-    console.log(`[Outreach] SMS sent to ${phone}, sid=${smsSid}`);
-
-    const delayMs = parseFloat(delay_hours) * 60 * 60 * 1000;
-    setTimeout(async () => {
-      try {
-        const callSid = await outreach.callProspect(client, fromNumber, phone, PUBLIC_URL);
-        console.log(`[Outreach] Call to ${phone} started, sid=${callSid}`);
-      } catch (e) {
-        console.error(`[Outreach] Call to ${phone} failed:`, e.message);
+    if (skip_if_contacted === 'true') {
+      const existing = await outreach.getContact(phone);
+      if (existing?.sms_sent_at) {
+        // Recover records left between SMS delivery and call scheduling by an old
+        // in-memory timer, instead of sending the SMS again or silently skipping.
+        if (!existing.call_status && !existing.call_sid && !existing.call_started_at) {
+          const callDueAt = await outreach.scheduleCall(phone, delayHours);
+          return res.json({
+            status: 'call_scheduled',
+            phone,
+            call_in_hours: delayHours,
+            call_due_at: callDueAt.toISOString(),
+            recovered: true,
+          });
+        }
+        return res.json({ status: 'already_contacted', phone });
       }
-    }, delayMs);
+    }
 
-    res.json({ status: 'outreach_started', phone, smsSid, call_in_hours: delay_hours });
+    const smsSid = await outreach.smsProspect(client, fromNumber, phone, biz.name);
+    const callDueAt = await outreach.scheduleCall(phone, delayHours);
+    console.log(`[Outreach] SMS sent to ${phone}, sid=${smsSid}`);
+    console.log(`[Outreach] AI call scheduled for ${phone} at ${callDueAt.toISOString()}`);
+
+    res.json({
+      status: 'outreach_started',
+      phone,
+      smsSid,
+      call_in_hours: delayHours,
+      call_due_at: callDueAt.toISOString(),
+    });
   } catch (e) {
     console.error('[Outreach] Error:', e.message);
     res.status(500).json({ error: e.message });
@@ -280,7 +356,38 @@ wss.on('connection', (ws) => {
   handleSession(ws, { getBiz, sendSms });
 });
 
-if (require.main === module) {
-  server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+// A single worker per process drains durable MongoDB jobs. MongoDB leases make
+// claims safe across restarts and multiple running instances.
+let outreachWorkerActive = false;
+async function processOutreachQueue() {
+  if (outreachWorkerActive || !client) return;
+  outreachWorkerActive = true;
+  let job = null;
+  try {
+    job = await outreach.claimDueCall();
+    if (!job) return;
+    const biz = Object.values(clients)[0];
+    const callSid = await outreach.callProspect(client, biz.twilioNumber, job.phone, PUBLIC_URL);
+    console.log(`[Outreach] Call to ${job.phone} started, sid=${callSid}`);
+  } catch (e) {
+    console.error('[Outreach] Scheduled call failed:', e.message);
+    if (job) {
+      try {
+        await outreach.retryCall(job.phone, job.call_attempts || 1, e);
+      } catch (retryError) {
+        console.error('[Outreach] Could not update scheduled call:', retryError.message);
+      }
+    }
+  } finally {
+    outreachWorkerActive = false;
+  }
 }
-module.exports = { app, server, wss, lastCustomer, getBiz, sendSms };
+
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`Listening on ${PORT}`);
+    processOutreachQueue();
+    setInterval(processOutreachQueue, 15 * 1000);
+  });
+}
+module.exports = { app, server, wss, lastCustomer, getBiz, sendSms, processOutreachQueue };
