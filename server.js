@@ -6,15 +6,40 @@ const express = require('express');
 const twilio = require('twilio');
 const { WebSocketServer } = require('ws');
 const fs = require('fs');
+const path = require('path');
 const { handleSession } = require('./receptionist');
 const outreach = require('./outreach');
+const billing = require('./billing');
 
 const app = express();
-app.use(express.urlencoded({ extended: false }));
+// Stripe needs the unmodified body to verify its webhook signature.
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json', limit: '1mb' }), async (req, res) => {
+  try {
+    await billing.handleWebhook(req.body, req.get('stripe-signature'));
+    res.sendStatus(200);
+  } catch (e) {
+    console.error('[Stripe webhook] Processing failed:', e.message);
+    const invalidSignature = /signature|missing stripe webhook/i.test(e.message);
+    res.status(invalidSignature ? 400 : 500).send('Webhook processing failed.');
+  }
+});
+
+app.use(express.json({ limit: '16kb' }));
+app.use(express.urlencoded({ extended: false, limit: '16kb' }));
+app.use((_, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com"
+  );
+  next();
+});
 app.use((req, res, next) => {
   console.log(`>>> ${req.method} ${req.originalUrl} | To=${req.body?.To} From=${req.body?.From}`);
   next();
 });
+app.use(express.static(path.join(__dirname, 'public')));
 
 const {
   TWILIO_ACCOUNT_SID,
@@ -165,7 +190,40 @@ app.get('/bookings', async (req, res) => {
   }
 });
 
-app.get('/', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+app.get('/health', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+
+const checkoutAttempts = new Map();
+function allowCheckout(ip) {
+  const now = Date.now();
+  const recent = (checkoutAttempts.get(ip) || []).filter((time) => now - time < 15 * 60 * 1000);
+  if (recent.length >= 8) return false;
+  recent.push(now);
+  checkoutAttempts.set(ip, recent);
+  return true;
+}
+
+app.post('/api/create-checkout-session', async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+    return res.status(400).json({ error: 'Enter a valid email address.' });
+  }
+  if (!allowCheckout(req.ip)) {
+    return res.status(429).json({ error: 'Too many attempts. Please try again shortly.' });
+  }
+
+  try {
+    const session = await billing.createCheckoutSession(email);
+    if (!session.url) throw new Error('Stripe did not return a checkout URL.');
+    res.json({ url: session.url });
+  } catch (e) {
+    console.error('[Stripe checkout] Session creation failed:', e.message);
+    const status = e.statusCode || 502;
+    const message = status === 503
+      ? 'Checkout is not configured yet. Please contact us to start your trial.'
+      : 'Checkout could not be opened. Please try again or contact us.';
+    res.status(status).json({ error: message });
+  }
+});
 
 // ─── KEEP-ALIVE PING (prevents Render free tier from sleeping) ───────────────
 // Pings itself every 10 minutes so the server never spins down.
