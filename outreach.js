@@ -65,7 +65,8 @@ async function claimDueCall() {
     },
     { sort: { call_due_at: 1 }, returnDocument: 'after' }
   );
-  return result?.value ?? result ?? null;
+  if (!result) return null;
+  return Object.prototype.hasOwnProperty.call(result, 'value') ? result.value : result;
 }
 
 // Retry a failed provider request with bounded backoff; stop after five attempts.
