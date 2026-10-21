@@ -43,8 +43,21 @@ These tests use stand-ins for Twilio, Claude and MongoDB, so no real accounts or
 - Calls: Twilio voice plus ConversationRelay runs roughly $0.10 or less per minute
 - AI (Claude Haiku): a few cents per call
 
-A 3-minute call costs you roughly $0.30–0.40 all in. For comparison, AI receptionist services sell for $200–500/month per business.
+A 3-minute call costs you roughly $0.30–0.40 all in. The website offer in this project is $100/month after a 7-day trial.
 
 ## Owner replies by text
 - If the owner texts the business number, the message goes to the **last customer** who called or texted.
 - To reply to a specific customer, start the text with their number: `+15551234567 On our way!`
+
+## AI receptionist subscription website
+The `public/` folder contains the customer-facing AI receptionist offer page and the Stripe Checkout integration. The offer is $100 USD per month after a 7-day trial. Checkout requires a payment method; Stripe starts the recurring subscription after the trial unless canceled.
+
+### Stripe and Render setup before accepting customers
+1. In Stripe, use a restricted secret key with permission to create Checkout Sessions and read subscriptions. Add it to Render as `STRIPE_API_KEY` (never commit it to this repository).
+2. Set `PUBLIC_URL` to the deployed HTTPS origin, for example `https://your-service.onrender.com`.
+3. In Stripe Workbench, add a webhook endpoint at `https://your-service.onrender.com/api/stripe/webhook` and subscribe it to `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`, and `invoice.payment_failed`. Set the endpoint signing secret in Render as `STRIPE_WEBHOOK_SECRET`.
+4. Ensure `MONGODB_URI` is configured. The webhook stores subscription status, trial end, customer email, and phone (when supplied) in the MongoDB `subscribers` collection. New subscribers still need manual business setup in `clients.json` and phone/calendar configuration; checkout does not automatically provision a receptionist.
+5. Make sure the public number in the page is staffed or can connect billing and setup requests to a person. The current demo number is `(916) 313-8648`.
+6. Review the draft privacy notice and terms, add the final business identity and any required contact information, and confirm applicable tax collection obligations. Automatic tax is not enabled by this integration.
+
+A completed Checkout page means a trial subscription exists; the signed webhook is the source used to keep local subscriber records current. Configure and verify the webhook in Stripe before advertising the checkout link.
