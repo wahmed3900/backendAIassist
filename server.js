@@ -6,13 +6,15 @@ const express = require('express');
 const twilio = require('twilio');
 const { WebSocketServer } = require('ws');
 const fs = require('fs');
+const crypto = require('crypto');
 const { handleSession } = require('./receptionist');
 const outreach = require('./outreach');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
-  console.log(`>>> ${req.method} ${req.originalUrl} | To=${req.body?.To} From=${req.body?.From}`);
+  // Log method and path only: avoid query-string secrets and caller phone numbers.
+  console.log(`>>> ${req.method} ${req.path}`);
   next();
 });
 
@@ -37,13 +39,23 @@ const lastCustomer = {};
 
 // Only accept requests that really come from Twilio
 function verifyTwilio(req, res, next) {
-  if (SKIP_SIGNATURE_CHECK === 'true') return next();
-  const ok = twilio.validateRequest(
-    TWILIO_AUTH_TOKEN,
-    req.headers['x-twilio-signature'] || '',
-    PUBLIC_URL + req.originalUrl,
-    req.body
-  );
+  // Signature bypass is allowed only outside production (e.g. local simulated tests).
+  if (SKIP_SIGNATURE_CHECK === 'true' && process.env.NODE_ENV !== 'production') return next();
+  if (!TWILIO_AUTH_TOKEN || !PUBLIC_URL) {
+    console.error('Twilio signature validation is not configured.');
+    return res.status(503).send('Webhook validation unavailable');
+  }
+  let ok = false;
+  try {
+    ok = twilio.validateRequest(
+      TWILIO_AUTH_TOKEN,
+      req.headers['x-twilio-signature'] || '',
+      PUBLIC_URL.replace(/\/$/, '') + req.originalUrl,
+      req.body
+    );
+  } catch (e) {
+    console.warn('Twilio signature validation failed:', e.message);
+  }
   return ok ? next() : res.status(403).send('Forbidden');
 }
 
@@ -154,14 +166,14 @@ app.post('/sms', verifyTwilio, async (req, res) => {
 });
 
 // Owner can see upcoming bookings
-app.get('/bookings', async (req, res) => {
-  if (!process.env.ADMIN_KEY || req.query.key !== process.env.ADMIN_KEY) return res.status(403).send('Forbidden');
+app.get('/bookings', requireAdmin, async (req, res) => {
   try {
     const now = new Date().toISOString();
     const all = await require('./calendar').load();
     res.json(all.filter(b => b.start >= now).sort((a, b) => a.start.localeCompare(b.start)));
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    console.error('Bookings load failed:', e.message);
+    res.status(500).json({ error: 'Unable to load bookings' });
   }
 });
 
@@ -189,8 +201,16 @@ if (PUBLIC_URL) {
 // POST /outreach — send SMS now, schedule AI call after delay_hours
 // Only the owner may start outreach: requires ADMIN_KEY (header x-admin-key or body "key").
 function requireAdmin(req, res, next) {
-  const key = req.get('x-admin-key') || (req.body && req.body.key);
-  if (!process.env.ADMIN_KEY || key !== process.env.ADMIN_KEY) return res.status(403).send('Forbidden');
+  // Keep admin credentials out of URLs and request bodies; send x-admin-key header only.
+  const expected = process.env.ADMIN_KEY;
+  const supplied = req.get('x-admin-key');
+  if (!expected || !supplied) return res.status(403).send('Forbidden');
+  const expectedBuffer = Buffer.from(expected, 'utf8');
+  const suppliedBuffer = Buffer.from(supplied, 'utf8');
+  if (expectedBuffer.length !== suppliedBuffer.length ||
+      !crypto.timingSafeEqual(expectedBuffer, suppliedBuffer)) {
+    return res.status(403).send('Forbidden');
+  }
   next();
 }
 
@@ -263,20 +283,64 @@ app.post('/outreach-status', verifyTwilio, async (req, res) => {
 
 // GET /outreach-log — view all contacts (requires ADMIN_KEY)
 // FIX: made async, await loadLog() which now reads from MongoDB
-app.get('/outreach-log', async (req, res) => {
-  if (!process.env.ADMIN_KEY || req.query.key !== process.env.ADMIN_KEY) {
-    return res.status(403).send('Forbidden');
+app.get('/outreach-log', requireAdmin, async (req, res) => {
+  try {
+    res.json(await outreach.loadLog());
+  } catch (e) {
+    console.error('Outreach log load failed:', e.message);
+    res.status(500).json({ error: 'Unable to load outreach log' });
   }
-  res.json(await outreach.loadLog());
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 
 // WebSocket for the AI receptionist
 const server = http.createServer(app);
-const wss = new WebSocketServer({ server, path: '/relay' });
+const wss = new WebSocketServer({ noServer: true });
+
+server.on('upgrade', (req, socket, head) => {
+  const requestUrl = req.url || '/';
+  const pathname = requestUrl.split('?')[0];
+  if (pathname !== '/relay') {
+    socket.destroy();
+    return;
+  }
+
+  // Never accept an unauthenticated relay connection if production config is incomplete.
+  if (!TWILIO_AUTH_TOKEN || !PUBLIC_URL) {
+    socket.write('HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+
+  const allowLocalBypass = SKIP_SIGNATURE_CHECK === 'true' && process.env.NODE_ENV !== 'production';
+  let valid = allowLocalBypass;
+  if (!allowLocalBypass) {
+    const signature = req.headers['x-twilio-signature'] || '';
+    // ConversationRelay signatures use the WebSocket URL (wss://), including its query string.
+    const signatureUrl = PUBLIC_URL.replace(/\/$/, '').replace(/^https:/i, 'wss:').replace(/^http:/i, 'ws:') + requestUrl;
+    try {
+      valid = twilio.validateRequest(TWILIO_AUTH_TOKEN, signature, signatureUrl, {});
+    } catch (e) {
+      console.warn('WebSocket signature validation failed:', e.message);
+      valid = false;
+    }
+  }
+
+  if (!valid) {
+    console.warn('Rejected unauthenticated /relay WebSocket handshake');
+    socket.write('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+
+  wss.handleUpgrade(req, socket, head, (ws) => {
+    wss.emit('connection', ws, req);
+  });
+});
+
 wss.on('connection', (ws) => {
-  console.log('>>> WebSocket /relay connected');
+  console.log('>>> Authenticated WebSocket /relay connected');
   handleSession(ws, { getBiz, sendSms });
 });
 

@@ -26,7 +26,7 @@ These tests use stand-ins for Twilio, Claude and MongoDB, so no real accounts or
 1. **Twilio:** buy a local number and complete the **A2P 10DLC** registration. US carriers require it before you can send texts, and approval takes a few days.
 2. **Twilio Console → Voice → Settings:** accept the **Predictive and Generative AI** terms. ConversationRelay, the feature the AI receptionist uses, needs this.
 3. **Anthropic:** get an API key at console.anthropic.com.
-4. **MongoDB:** create a free cluster at mongodb.com/cloud/atlas (the free M0 tier is plenty), create a database user, and allow access from anywhere (0.0.0.0/0) under Network Access, since Render's IP isn't fixed on the free plan. Copy the connection string into `MONGODB_URI`.
+4. **MongoDB:** create a free cluster at mongodb.com/cloud/atlas (the free M0 tier is plenty), create a database user, and configure the narrowest practical Network Access rule. Avoid `0.0.0.0/0` unless you have consciously accepted the exposure and have no safer networking option; use stable egress/private networking where available. Copy the connection string into `MONGODB_URI`.
 5. **Deploy** this folder to Render or Railway (the app needs WebSockets; both support them). Set the variables from `.env.example`. `PUBLIC_URL` must be your https URL.
 6. **Your Twilio number's settings:**
    - A call comes in → `https://YOUR-URL/voice` (POST)
@@ -35,7 +35,8 @@ These tests use stand-ins for Twilio, Claude and MongoDB, so no real accounts or
 
 ## Seeing bookings
 - Every booking gets texted to the owner.
-- Full list: `https://YOUR-URL/bookings?key=YOUR_ADMIN_KEY`
+- Full list: send an `x-admin-key: YOUR_ADMIN_KEY` HTTP header to `https://YOUR-URL/bookings` (do not put the key in the URL).
+- Outreach log: send the same header to `https://YOUR-URL/outreach-log`. Keep `ADMIN_KEY` long, random, and stored only in the hosting provider's secret environment variables.
 - Bookings are stored in MongoDB, so they survive restarts and redeploys. Each business's slot (`business` + `start`) has a unique index, so the same appointment time can never be double-booked even if two calls land at once.
 
 ## Cost per client (rough)
