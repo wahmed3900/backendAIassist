@@ -178,9 +178,6 @@ app.get('/bookings', requireAdmin, async (req, res) => {
 });
 
 // ─── LANDING PAGE + DEMO REQUESTS ───────────────────────────────────────────
-// public/index.html is the homepage. Demo requests go to MongoDB (demo_requests collection)
-// when MONGODB_URI is set, e.g. on Render. Without it (local testing) they go to
-// data/demo-requests.json, which is git-ignored because it holds lead contact info.
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/health', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
@@ -262,7 +259,6 @@ app.get('/demo-requests', requireAdmin, async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── KEEP-ALIVE PING (prevents Render free tier from sleeping) ───────────────
-// Pings itself every 10 minutes so the server never spins down.
 if (PUBLIC_URL) {
   const PING_INTERVAL = 10 * 60 * 1000; // 10 minutes
   const pingUrl = PUBLIC_URL + '/';
@@ -279,11 +275,7 @@ if (PUBLIC_URL) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── OUTREACH ROUTES ────────────────────────────────────────────────────────
-
-// POST /outreach — send SMS now, schedule AI call after delay_hours
-// Only the owner may start outreach: requires ADMIN_KEY (header x-admin-key or body "key").
 function requireAdmin(req, res, next) {
-  // Keep admin credentials out of URLs and request bodies; send x-admin-key header only.
   const expected = process.env.ADMIN_KEY;
   const supplied = req.get('x-admin-key');
   if (!expected || !supplied) return res.status(403).send('Forbidden');
@@ -300,7 +292,6 @@ app.post('/outreach', requireAdmin, async (req, res) => {
   const { phone, delay_hours = 24, skip_if_contacted = 'true' } = req.body;
   if (!phone) return res.status(400).json({ error: 'phone is required' });
 
-  // FIX: await because alreadyContacted() is now async (uses MongoDB)
   if (skip_if_contacted === 'true' && await outreach.alreadyContacted(phone)) {
     return res.json({ status: 'already_contacted', phone });
   }
@@ -329,7 +320,6 @@ app.post('/outreach', requireAdmin, async (req, res) => {
   }
 });
 
-// GET|POST /outreach-twiml — TwiML for the outbound AI sales call
 app.all('/outreach-twiml', (req, res) => {
   const biz = Object.values(clients)[0];
   const twiml = new VoiceResponse();
@@ -346,8 +336,6 @@ app.all('/outreach-twiml', (req, res) => {
   res.type('text/xml').send(twiml.toString());
 });
 
-// POST /outreach-status — Twilio posts here when an outbound call ends
-// FIX: made async, uses MongoDB via loadLog() to update call status
 app.post('/outreach-status', verifyTwilio, async (req, res) => {
   const { To, CallStatus } = req.body;
   console.log(`[Outreach] Call to ${To} ended: ${CallStatus}`);
@@ -363,8 +351,6 @@ app.post('/outreach-status', verifyTwilio, async (req, res) => {
   res.sendStatus(200);
 });
 
-// GET /outreach-log — view all contacts (requires ADMIN_KEY)
-// FIX: made async, await loadLog() which now reads from MongoDB
 app.get('/outreach-log', requireAdmin, async (req, res) => {
   try {
     res.json(await outreach.loadLog());
@@ -388,14 +374,15 @@ server.on('upgrade', (req, socket, head) => {
     return;
   }
 
+  const allowLocalBypass = SKIP_SIGNATURE_CHECK === 'true' && process.env.NODE_ENV !== 'production';
+
   // Never accept an unauthenticated relay connection if production config is incomplete.
-  if (!TWILIO_AUTH_TOKEN || !PUBLIC_URL) {
+  if (!allowLocalBypass && (!TWILIO_AUTH_TOKEN || !PUBLIC_URL)) {
     socket.write('HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\n\r\n');
     socket.destroy();
     return;
   }
 
-  const allowLocalBypass = SKIP_SIGNATURE_CHECK === 'true' && process.env.NODE_ENV !== 'production';
   let valid = allowLocalBypass;
   if (!allowLocalBypass) {
     const signature = req.headers['x-twilio-signature'] || '';
