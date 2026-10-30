@@ -182,7 +182,35 @@ app.get('/bookings', requireAdmin, async (req, res) => {
   }
 });
 
-app.get('/', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+// Landing page (public/index.html) + its demo form
+app.use(express.static(__dirname + '/public'));
+app.get('/', (_, res) => res.sendFile(__dirname + '/public/index.html'));
+app.get('/health', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+
+app.post('/demo-request', async (req, res) => {
+  const b = req.body || {};
+  if (b.website) return res.json({ ok: true }); // spam bot filled the hidden field
+  const clean = (v, n) => String(v || '').trim().slice(0, n);
+  const lead = {
+    name: clean(b.name, 80), business: clean(b.business, 120), phone: clean(b.phone, 25),
+    email: clean(b.email, 120), trade: clean(b.trade, 40), missedCalls: clean(b.missedCalls, 40),
+    notes: clean(b.notes, 1000),
+  };
+  if (!lead.name || !lead.business || lead.phone.replace(/\D/g, '').length < 10) {
+    return res.status(400).json({ ok: false, error: 'Missing name, business or phone' });
+  }
+  console.log('[DEMO REQUEST]', JSON.stringify(lead));
+  try {
+    const [from, biz] = Object.entries(clients).find(([, c]) => c.demo) || Object.entries(clients)[0];
+    const text = `New demo request (sacaireceptionist.com)\n${lead.name} - ${lead.business}\n${lead.phone}` +
+      (lead.email ? `\n${lead.email}` : '') + `\nTrade: ${lead.trade}` +
+      (lead.missedCalls ? `\nMissed calls: ${lead.missedCalls}` : '') + (lead.notes ? `\n${lead.notes}` : '');
+    await sendSms(from, biz.ownerPhone, text.slice(0, 1500));
+  } catch (e) {
+    console.error('Demo request text failed:', e.message);
+  }
+  res.json({ ok: true });
+});
 
 // ─── OUTREACH ROUTES ────────────────────────────────────────────────────────
 
