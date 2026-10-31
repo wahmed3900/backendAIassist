@@ -3,181 +3,277 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy – AI Web Tool Service</title>
+  <title>Privacy Policy – SacAI Receptionist</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-      background: #f9fafb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f8f9fb;
       color: #1a1a2e;
       line-height: 1.7;
     }
+
     header {
-      background: #1a1a2e;
-      color: #fff;
-      padding: 1.5rem 2rem;
+      background: #0f0f1a;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     header a {
-      color: #60a5fa;
+      color: #fff;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 13px;
+      opacity: 0.7;
+      transition: opacity .2s;
     }
-    header h1 { font-size: 1.6rem; margin-top: 0.5rem; }
-    header p  { font-size: 0.85rem; color: #9ca3af; margin-top: 0.25rem; }
-    main {
-      max-width: 760px;
-      margin: 2.5rem auto;
-      padding: 0 1.5rem 4rem;
-    }
-    h2 {
-      font-size: 1.15rem;
+    header a:hover { opacity: 1; }
+    header .logo {
+      font-size: 18px;
       font-weight: 700;
-      color: #1a1a2e;
-      margin: 2rem 0 0.5rem;
-      padding-bottom: 0.25rem;
-      border-bottom: 2px solid #e5e7eb;
+      color: #fff;
+      letter-spacing: -0.3px;
     }
-    p  { margin-bottom: 0.9rem; }
-    ul { margin: 0.5rem 0 0.9rem 1.5rem; }
-    li { margin-bottom: 0.4rem; }
-    a  { color: #2563eb; }
-    .notice {
-      background: #eff6ff;
-      border-left: 4px solid #3b82f6;
-      padding: 1rem 1.25rem;
-      border-radius: 0 6px 6px 0;
-      margin: 1.5rem 0;
-      font-size: 0.95rem;
+    header .logo span { color: #7c5cfc; }
+    header .sep { color: rgba(255,255,255,.3); margin: 0 6px; }
+
+    .hero {
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1040 100%);
+      padding: 60px 40px 50px;
+      text-align: center;
     }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .hero p {
+      color: rgba(255,255,255,.6);
+      margin-top: 10px;
+      font-size: 15px;
+    }
+
+    main {
+      max-width: 780px;
+      margin: 48px auto 80px;
+      padding: 0 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 52px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.07);
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f0f1a;
+      margin: 36px 0 12px;
+    }
+    h2:first-of-type { margin-top: 0; }
+
+    p { font-size: 15px; color: #3a3a4a; margin-bottom: 14px; }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 14px;
+    }
+    ul li {
+      font-size: 15px;
+      color: #3a3a4a;
+      padding: 6px 0 6px 22px;
+      position: relative;
+    }
+    ul li::before {
+      content: "•";
+      color: #7c5cfc;
+      font-weight: 700;
+      position: absolute;
+      left: 0;
+    }
+
+    .highlight-box {
+      background: #f3f0ff;
+      border-left: 4px solid #7c5cfc;
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .highlight-box p {
+      margin: 0;
+      font-size: 14px;
+      color: #2a1a5e;
+      font-weight: 500;
+    }
+
+    a { color: #7c5cfc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .divider {
+      height: 1px;
+      background: #eee;
+      margin: 32px 0;
+    }
+
     footer {
       text-align: center;
-      font-size: 0.8rem;
-      color: #9ca3af;
-      margin-top: 3rem;
+      font-size: 13px;
+      color: #888;
+      padding: 32px 24px;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 32px 24px; }
+      .hero h1 { font-size: 26px; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <a href="/">← Back to sacaireceptionist.com</a>
-  <h1>Privacy Policy</h1>
-  <p>AI Web Tool Service &nbsp;·&nbsp; Last updated: October 30, 2026</p>
-</header>
+  <header>
+    <span class="logo">Sac<span>AI</span> Receptionist</span>
+    <span class="sep">/</span>
+    <a href="/">Home</a>
+    <span class="sep">/</span>
+    <a href="/terms.html">Terms of Service</a>
+  </header>
 
-<main>
-
-  <div class="notice">
-    <strong>SMS Notice:</strong> By submitting your phone number on our website, you may opt in to receive
-    text messages from AI Web Tool Service. Message &amp; data rates may apply.
-    Reply <strong>STOP</strong> to unsubscribe at any time. Reply <strong>HELP</strong> for assistance.
-    Message frequency varies.
+  <div class="hero">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: October 31, 2026</p>
   </div>
 
-  <h2>1. Who We Are</h2>
-  <p>
-    AI Web Tool Service ("we," "us," or "our") is a sole-proprietorship doing business under the name
-    <strong>AI Web Tool Service</strong>, operated by Waqas Ahmed, based in Sacramento, California.
-    We provide missed-call text-back and AI receptionist services to local small businesses.
-    Our website is <a href="https://sacaireceptionist.com">sacaireceptionist.com</a>.
-  </p>
-  <p>
-    Questions about this policy? Contact us at
-    <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>.
-  </p>
+  <main>
+    <div class="card">
 
-  <h2>2. Information We Collect</h2>
-  <p>We collect information in the following ways:</p>
-  <ul>
-    <li><strong>Demo request form:</strong> name, business name, phone number, email address, trade type, and any notes you submit.</li>
-    <li><strong>Phone calls &amp; texts:</strong> caller ID (phone number), call recordings or transcripts generated during AI-receptionist interactions, and the content of text messages sent to or from our service numbers.</li>
-    <li><strong>Usage data:</strong> server logs, including IP addresses, browser type, and pages visited on our website.</li>
-  </ul>
+      <h2>1. Who We Are</h2>
+      <p>
+        SacAI Receptionist is operated by <strong>Waqas Ahmed</strong> ("we," "us," or "our"),
+        providing AI-powered missed-call text-back and appointment booking services for local
+        businesses in the Sacramento, CA area. This Privacy Policy explains how we collect,
+        use, and protect information when you interact with our service.
+      </p>
 
-  <h2>3. How We Use Your Information</h2>
-  <ul>
-    <li>To deliver the missed-call text-back and AI receptionist service you or your business opted into.</li>
-    <li>To send you transactional SMS messages (appointment confirmations, missed-call notifications, demo follow-ups).</li>
-    <li>To contact you about your demo request or service inquiry.</li>
-    <li>To improve our services and troubleshoot technical issues.</li>
-    <li>To comply with legal obligations.</li>
-  </ul>
+      <div class="divider"></div>
 
-  <h2>4. SMS / Text Messaging</h2>
-  <p>
-    If you provide your phone number and check the SMS consent box on our demo request form, you agree to
-    receive text messages from AI Web Tool Service at the number provided. These messages may include:
-    appointment reminders, missed-call notifications, and service-related updates.
-  </p>
-  <ul>
-    <li><strong>Frequency:</strong> Message frequency varies based on your activity and service usage.</li>
-    <li><strong>Rates:</strong> Message &amp; data rates may apply depending on your carrier plan.</li>
-    <li><strong>Opt-out:</strong> Reply <strong>STOP</strong> to any message to unsubscribe immediately.</li>
-    <li><strong>Help:</strong> Reply <strong>HELP</strong> to any message for assistance, or email us at <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>.</li>
-  </ul>
-  <p>
-    <strong>We do not sell, rent, or share your phone number or SMS consent data with third parties
-    for marketing purposes.</strong> Your mobile information will not be shared with third parties or
-    affiliates for marketing or promotional purposes.
-  </p>
+      <h2>2. Information We Collect</h2>
+      <p>We may collect the following types of information:</p>
+      <ul>
+        <li>Your <strong>name</strong> and <strong>phone number</strong> when you submit an inquiry or opt in to receive SMS messages.</li>
+        <li><strong>Business name</strong> and contact details provided by business owners who sign up for the service.</li>
+        <li>Message content from SMS conversations initiated through our system.</li>
+        <li>Basic usage data (e.g., timestamps, message delivery status) to operate and improve the service.</li>
+      </ul>
 
-  <h2>5. How We Share Information</h2>
-  <p>We do not sell your personal information. We may share it only in these limited situations:</p>
-  <ul>
-    <li><strong>Service providers:</strong> Twilio (SMS and voice delivery), Anthropic (AI processing), MongoDB Atlas (data storage), and Render (hosting). Each provider has its own privacy policy.</li>
-    <li><strong>Legal requirements:</strong> If required by law, court order, or government authority.</li>
-    <li><strong>Business clients:</strong> If you contact a business that uses our AI receptionist service, your name, phone number, and conversation details are shared with that business owner so they can follow up with you.</li>
-  </ul>
+      <div class="divider"></div>
 
-  <h2>6. Data Retention</h2>
-  <p>
-    We retain call logs, booking records, and text-message logs for up to 12 months, or as long as
-    necessary to provide the service and comply with legal obligations. You may request deletion of
-    your data at any time by contacting us.
-  </p>
+      <h2>3. SMS / Text Message Communications</h2>
 
-  <h2>7. Your Rights</h2>
-  <p>Depending on your location, you may have the right to:</p>
-  <ul>
-    <li>Access the personal information we hold about you.</li>
-    <li>Request correction of inaccurate data.</li>
-    <li>Request deletion of your data.</li>
-    <li>Opt out of SMS communications at any time by replying STOP.</li>
-  </ul>
-  <p>To exercise any of these rights, email us at <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>.</p>
+      <div class="highlight-box">
+        <p>
+          By providing your phone number and opting in, you consent to receive automated SMS text messages
+          from SacAI Receptionist regarding missed calls, appointment confirmations, and follow-up information.
+          Message frequency varies. Msg &amp; data rates may apply.
+        </p>
+      </div>
 
-  <h2>8. Cookies &amp; Analytics</h2>
-  <p>
-    Our website may use basic session cookies to keep the site functional. We do not currently
-    use third-party advertising or tracking cookies.
-  </p>
+      <p><strong>Opt-out:</strong> Reply <strong>STOP</strong> at any time to unsubscribe from SMS messages. You will receive a confirmation and no further messages will be sent.</p>
+      <p><strong>Help:</strong> Reply <strong>HELP</strong> for assistance, or contact us directly at <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>.</p>
+      <p>We do not share your phone number or SMS opt-in information with third parties for their own marketing purposes.</p>
 
-  <h2>9. Children's Privacy</h2>
-  <p>
-    Our services are not directed to anyone under the age of 18. We do not knowingly collect
-    personal information from minors.
-  </p>
+      <div class="divider"></div>
 
-  <h2>10. Changes to This Policy</h2>
-  <p>
-    We may update this policy from time to time. The "Last updated" date at the top of this page
-    will reflect any changes. Continued use of our service after an update constitutes acceptance
-    of the revised policy.
-  </p>
+      <h2>4. How We Use Your Information</h2>
+      <ul>
+        <li>To deliver missed-call text-back and appointment booking services on behalf of your business.</li>
+        <li>To respond to inquiries and provide customer support.</li>
+        <li>To send transactional or service-related SMS messages you have opted in to receive.</li>
+        <li>To improve and maintain our service.</li>
+      </ul>
 
-  <h2>11. Contact Us</h2>
-  <p>
-    AI Web Tool Service<br />
-    Sacramento, California<br />
-    Email: <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a><br />
-    Website: <a href="https://sacaireceptionist.com">sacaireceptionist.com</a>
-  </p>
+      <div class="divider"></div>
+
+      <h2>5. How We Share Your Information</h2>
+      <p>
+        We do not sell, rent, or trade your personal information. We may share information only in
+        these limited circumstances:
+      </p>
+      <ul>
+        <li><strong>Service providers:</strong> We use Twilio to route SMS messages and may share necessary data with them solely to deliver the service. Twilio's privacy policy is available at <a href="https://www.twilio.com/legal/privacy" target="_blank" rel="noopener">twilio.com/legal/privacy</a>.</li>
+        <li><strong>Legal compliance:</strong> We may disclose information if required by law or to protect the rights and safety of users or the public.</li>
+      </ul>
+
+      <div class="divider"></div>
+
+      <h2>6. Data Security</h2>
+      <p>
+        We take reasonable measures to protect your information from unauthorized access, loss, or misuse.
+        However, no method of transmission over the internet is 100% secure, and we cannot guarantee
+        absolute security.
+      </p>
+
+      <div class="divider"></div>
+
+      <h2>7. Data Retention</h2>
+      <p>
+        We retain personal information only as long as necessary to provide the service or as required by
+        applicable law. SMS message logs are retained for up to 90 days unless a longer period is required
+        for compliance.
+      </p>
+
+      <div class="divider"></div>
+
+      <h2>8. Your Rights</h2>
+      <p>You may request to:</p>
+      <ul>
+        <li>Access the personal information we hold about you.</li>
+        <li>Correct inaccurate information.</li>
+        <li>Delete your personal information (subject to legal retention requirements).</li>
+        <li>Opt out of SMS communications at any time by replying <strong>STOP</strong>.</li>
+      </ul>
+      <p>To exercise any of these rights, email us at <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>.</p>
+
+      <div class="divider"></div>
+
+      <h2>9. Children's Privacy</h2>
+      <p>
+        Our service is not directed to individuals under the age of 13. We do not knowingly collect
+        personal information from children.
+      </p>
+
+      <div class="divider"></div>
+
+      <h2>10. Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time. Changes will be posted on this page with
+        an updated effective date. Continued use of our service after changes constitutes acceptance of
+        the updated policy.
+      </p>
+
+      <div class="divider"></div>
+
+      <h2>11. Contact Us</h2>
+      <p>
+        If you have questions about this Privacy Policy, please contact:<br /><br />
+        <strong>Waqas Ahmed</strong><br />
+        SacAI Receptionist<br />
+        Sacramento, CA<br />
+        Email: <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a><br />
+        Phone: <a href="tel:+12792836339">(279) 283-6339</a>
+      </p>
+
+    </div>
+  </main>
 
   <footer>
-    &copy; 2026 AI Web Tool Service. All rights reserved.
-    &nbsp;|&nbsp; <a href="/terms">Terms of Service</a>
+    &copy; 2026 SacAI Receptionist · Operated by Waqas Ahmed · Sacramento, CA<br />
+    <a href="/">Home</a> &nbsp;|&nbsp; <a href="/terms.html">Terms of Service</a>
   </footer>
 
-</main>
 </body>
 </html>
