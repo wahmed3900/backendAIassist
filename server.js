@@ -6,6 +6,7 @@ const express = require('express');
 const twilio = require('twilio');
 const { WebSocketServer } = require('ws');
 const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 const { handleSession } = require('./receptionist');
 const outreach = require('./outreach');
@@ -186,6 +187,15 @@ app.get('/bookings', requireAdmin, async (req, res) => {
 app.use(express.static(__dirname + '/public'));
 app.get('/', (_, res) => res.sendFile(__dirname + '/public/index.html'));
 app.get('/health', (_, res) => res.send('Missed-call text-back + AI receptionist is running.'));
+
+// Privacy and Terms pages
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'privacy_5.html'));
+});
+
+app.get('/terms', (req, res) => {
+  res.sendFile(path.join(__dirname, 'terms.html'));
+});
 
 app.post('/demo-request', async (req, res) => {
   const b = req.body || {};
