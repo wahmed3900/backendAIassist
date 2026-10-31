@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy | Sac AI Receptionist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<style>
+:root {
+--navy: #16213A;
+--paper: #F6F7F9;
+--white: #FFFFFF;
+--ink: #1A1E25;
+--muted: #5A6372;
+--line: #DCE0E6;
+--amber: #F2B33D;
+--blue: #2F6FED;
+--radius-sm: 8px;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+margin: 0;
+font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+font-variation-settings: "wdth" 100;
+color: var(--ink);
+background: var(--paper);
+line-height: 1.65;
+font-size: 17px;
+}
+a { color: var(--blue); }
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+.top { background: var(--navy); color: var(--white); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { font-weight: 700; font-variation-settings: "wdth" 80; font-size: 19px; text-decoration: none; letter-spacing: .01em; }
+.brand span { color: var(--amber); }
+.top a.call { text-decoration: none; font-weight: 600; font-size: 15px; padding: 9px 16px; border: 1.5px solid rgba(255,255,255,.35); border-radius: var(--radius-sm); color: var(--white); }
+
+.content { padding: 56px 0 80px; }
+h1 { font-weight: 800; font-variation-settings: "wdth" 72; font-size: clamp(30px, 4vw, 46px); line-height: 1.05; margin: 0 0 8px; }
+.updated { color: var(--muted); font-size: 15px; margin: 0 0 48px; }
+h2 { font-weight: 700; font-size: 20px; margin: 40px 0 10px; }
+p { margin: 0 0 16px; }
+ul { margin: 0 0 16px; padding-left: 24px; }
+li { margin-bottom: 6px; }
+.highlight { background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--amber); border-radius: 6px; padding: 16px 20px; margin: 0 0 20px; font-size: 15px; }
+
+footer { padding: 32px 0; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+footer a { color: var(--muted); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header class="top">
+<div class="wrap">
+<a class="brand" href="/">Sac <span>AI</span> Receptionist</a>
+<a class="call" href="tel:+19163138648">(916) 313-8648</a>
+</div>
+</header>
+
+<main class="content">
+<div class="wrap">
+<h1>Privacy Policy</h1>
+<p class="updated">Effective date: October 31, 2026</p>
+
+<p>This Privacy Policy describes how Sac AI Receptionist ("we," "us," or "our") collects, uses, and protects the information you provide when you use our website at <a href="https://sacaireceptionist.com">sacaireceptionist.com</a> or contact us about our service.</p>
+
+<h2>1. Information We Collect</h2>
+<p>When you submit the free trial request form, we collect:</p>
+<ul>
+<li>Your name</li>
+<li>Business name</li>
+<li>Phone number</li>
+<li>Email address (optional)</li>
+<li>Business type</li>
+<li>Estimated weekly missed calls</li>
+<li>Any additional notes you choose to include</li>
+</ul>
+
+<h2>2. How We Use Your Information</h2>
+<p>We use the information you provide solely to:</p>
+<ul>
+<li>Contact you to set up your free 14-day trial</li>
+<li>Send you a confirmation text message acknowledging receipt of your request</li>
+<li>Follow up about your trial experience</li>
+<li>Answer questions and provide support related to the service</li>
+</ul>
+<p>We do not sell, rent, or share your personal information with third parties for marketing purposes.</p>
+
+<h2>3. SMS / Text Messaging</h2>
+<div class="highlight">
+<strong>SMS Consent:</strong> By checking the SMS consent box on our request form, you agree to receive text messages from Sac AI Receptionist at the phone number you provided. Your consent is not a condition of purchasing any goods or services.
+</div>
+<p>When you opt in to SMS:</p>
+<ul>
+<li><strong>Message types:</strong> We may send a confirmation text when we receive your request, and follow-up messages about setting up your trial.</li>
+<li><strong>Frequency:</strong> Message frequency varies. Typically no more than a few messages related to your trial setup.</li>
+<li><strong>Rates:</strong> Message and data rates may apply depending on your mobile carrier plan.</li>
+<li><strong>Opt out:</strong> Reply <strong>STOP</strong> at any time to stop receiving text messages from us. After opting out, you will receive one final confirmation message.</li>
+<li><strong>Help:</strong> Reply <strong>HELP</strong> for assistance, or contact us at <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>.</li>
+</ul>
+<p>Mobile opt-in data is never shared with third parties or affiliates for their own marketing purposes.</p>
+
+<h2>4. Data Retention</h2>
+<p>We retain your contact information only as long as needed to provide the requested service or as required by law. If you decide not to proceed with a trial or cancel at any time, you may request deletion of your data by contacting us.</p>
+
+<h2>5. Security</h2>
+<p>We take reasonable precautions to protect your information. Your data is stored securely and access is limited to those who need it to operate the service.</p>
+
+<h2>6. Third-Party Services</h2>
+<p>We use the following third-party services to operate our platform:</p>
+<ul>
+<li><strong>Twilio</strong> — to send and receive SMS messages. Twilio's privacy policy is available at <a href="https://www.twilio.com/en-us/legal/privacy" target="_blank" rel="noopener">twilio.com/legal/privacy</a>.</li>
+<li><strong>Render</strong> — to host our web application. Render's privacy policy is available at <a href="https://render.com/privacy" target="_blank" rel="noopener">render.com/privacy</a>.</li>
+</ul>
+<p>These services receive only the information necessary to deliver the functionality they provide.</p>
+
+<h2>7. Your Rights</h2>
+<p>You may contact us at any time to:</p>
+<ul>
+<li>Request access to the personal information we hold about you</li>
+<li>Request correction of inaccurate data</li>
+<li>Request deletion of your data</li>
+<li>Opt out of SMS messages (reply STOP to any message, or email us)</li>
+</ul>
+
+<h2>8. Changes to This Policy</h2>
+<p>We may update this policy from time to time. When we do, we will update the effective date at the top. Continued use of the site after changes constitutes acceptance of the updated policy.</p>
+
+<h2>9. Contact Us</h2>
+<p>If you have questions about this Privacy Policy or how we handle your data, please contact us:</p>
+<ul>
+<li>Email: <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a></li>
+<li>Phone / text: <a href="tel:+19163138648">(916) 313-8648</a></li>
+<li>Location: Sacramento, CA</li>
+</ul>
+</div>
+</main>
+
+<footer>
+<div class="wrap">
+<span>&copy; 2026 Sac AI Receptionist, Sacramento, CA</span>
+<span style="display:flex;gap:20px;">
+<a href="/">Home</a>
+<a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>
+</span>
+</div>
+</footer>
+
+</body>
+</html>
