@@ -9,333 +9,361 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #16213A;
-    --navy-2: #22304F;
-    --paper: #F6F7F9;
-    --white: #FFFFFF;
-    --ink: #1A1E25;
-    --muted: #5A6372;
-    --line: #DCE0E6;
-    --amber: #F2B33D;
-    --blue: #2F6FED;
-    --red: #D9463B;
-    --radius-lg: 28px;
-    --radius-sm: 8px;
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
-    font-variation-settings: "wdth" 100;
-    color: var(--ink);
-    background: var(--paper);
-    line-height: 1.55;
-    font-size: 17px;
-  }
-  a { color: inherit; }
-  :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+:root {
+--navy: #16213A;
+--navy-2: #22304F;
+--paper: #F6F7F9;
+--white: #FFFFFF;
+--ink: #1A1E25;
+--muted: #5A6372;
+--line: #DCE0E6;
+--amber: #F2B33D;
+--blue: #2F6FED;
+--red: #D9463B;
+--radius-lg: 28px;
+--radius-sm: 8px;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+margin: 0;
+font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+font-variation-settings: "wdth" 100;
+color: var(--ink);
+background: var(--paper);
+line-height: 1.55;
+font-size: 17px;
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-  /* Header */
-  .top { background: var(--navy); color: var(--white); }
-  .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .brand { font-weight: 700; font-variation-settings: "wdth" 80; font-size: 19px; text-decoration: none; letter-spacing: .01em; }
-  .brand span { color: var(--amber); }
-  .top a.call { text-decoration: none; font-weight: 600; font-size: 15px; padding: 9px 16px; border: 1.5px solid rgba(255,255,255,.35); border-radius: var(--radius-sm); }
-  .top a.call:hover { border-color: var(--amber); }
+/* Header */
+.top { background: var(--navy); color: var(--white); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { font-weight: 700; font-variation-settings: "wdth" 80; font-size: 19px; text-decoration: none; letter-spacing: .01em; }
+.brand span { color: var(--amber); }
+.top a.call { text-decoration: none; font-weight: 600; font-size: 15px; padding: 9px 16px; border: 1.5px solid rgba(255,255,255,.35); border-radius: var(--radius-sm); }
+.top a.call:hover { border-color: var(--amber); }
 
-  /* Hero */
-  .hero { background: var(--navy); color: var(--white); padding: 56px 0 88px; overflow: hidden; }
-  .hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
-  h1 {
-    margin: 0 0 22px;
-    font-weight: 800;
-    font-variation-settings: "wdth" 66;
-    font-size: clamp(46px, 7.2vw, 92px);
-    line-height: .94;
-    letter-spacing: -.01em;
-  }
-  .lede { font-size: 20px; max-width: 34ch; color: #C9D1E0; margin: 0 0 32px; }
-  .btn {
-    display: inline-block; cursor: pointer; border: 0;
-    background: var(--amber); color: var(--navy);
-    font: inherit; font-weight: 700; font-size: 17px;
-    padding: 16px 26px; border-radius: var(--radius-sm); text-decoration: none;
-  }
-  .btn:hover { background: #F6C463; }
-  .hero .note { margin-top: 16px; font-size: 14px; color: #93A0B8; }
-  .try {
-    margin-top: 28px; padding: 14px 16px; max-width: 34ch;
-    border: 1.5px dashed rgba(255,255,255,.3); border-radius: var(--radius-sm);
-    font-size: 15px; color: #C9D1E0;
-  }
-  .try a { color: var(--amber); font-weight: 700; text-decoration: none; white-space: nowrap; }
+/* Hero */
+.hero { background: var(--navy); color: var(--white); padding: 56px 0 88px; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
+h1 {
+margin: 0 0 22px;
+font-weight: 800;
+font-variation-settings: "wdth" 66;
+font-size: clamp(46px, 7.2vw, 92px);
+line-height: .94;
+letter-spacing: -.01em;
+}
+.lede { font-size: 20px; max-width: 34ch; color: #C9D1E0; margin: 0 0 32px; }
+.btn {
+display: inline-block; cursor: pointer; border: 0;
+background: var(--amber); color: var(--navy);
+font: inherit; font-weight: 700; font-size: 17px;
+padding: 16px 26px; border-radius: var(--radius-sm); text-decoration: none;
+}
+.btn:hover { background: #F6C463; }
+.hero .note { margin-top: 16px; font-size: 14px; color: #93A0B8; }
+.try {
+margin-top: 28px; padding: 14px 16px; max-width: 34ch;
+border: 1.5px dashed rgba(255,255,255,.3); border-radius: var(--radius-sm);
+font-size: 15px; color: #C9D1E0;
+}
+.try a { color: var(--amber); font-weight: 700; text-decoration: none; white-space: nowrap; }
 
-  /* Phone */
-  .phone {
-    width: 100%; max-width: 330px; justify-self: center;
-    background: var(--white); color: var(--ink);
-    border-radius: var(--radius-lg); padding: 18px 16px 22px;
-    border: 8px solid #0E1628;
-    box-shadow: 0 30px 60px -20px rgba(0,0,0,.55);
-  }
-  .phone .bar { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); padding: 0 6px 14px; border-bottom: 1px solid var(--line); }
-  .phone .bar b { color: var(--ink); }
-  .event { display: flex; gap: 12px; align-items: center; padding: 16px 6px; border-bottom: 1px solid var(--line); }
-  .dot { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: none; background: #FBE5E3; color: var(--red); }
-  .event .t { font-weight: 600; font-size: 15px; }
-  .event .s { font-size: 13px; color: var(--muted); }
-  .bubbles { padding: 14px 4px 0; display: grid; gap: 8px; }
-  .bubble, .stamp { margin: 0; }
-  .bubble { max-width: 86%; padding: 10px 13px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; }
-  .bubble.out { justify-self: end; background: var(--blue); color: var(--white); border-bottom-right-radius: 5px; }
-  .bubble.in { justify-self: start; background: #ECEEF2; border-bottom-left-radius: 5px; }
-  .stamp { font-size: 12px; color: var(--muted); text-align: center; }
-  .stamp b { color: var(--blue); }
-  .seq { opacity: 0; transform: translateY(6px); animation: show .45s ease-out forwards; }
-  .seq.d1 { animation-delay: .9s; } .seq.d2 { animation-delay: 1.5s; } .seq.d3 { animation-delay: 2.7s; } .seq.d4 { animation-delay: 3.8s; }
-  @keyframes show { to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { .seq { animation: none; opacity: 1; transform: none; } html { scroll-behavior: auto; } }
+/* Phone */
+.phone {
+width: 100%; max-width: 330px; justify-self: center;
+background: var(--white); color: var(--ink);
+border-radius: var(--radius-lg); padding: 18px 16px 22px;
+border: 8px solid #0E1628;
+box-shadow: 0 30px 60px -20px rgba(0,0,0,.55);
+}
+.phone .bar { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); padding: 0 6px 14px; border-bottom: 1px solid var(--line); }
+.phone .bar b { color: var(--ink); }
+.event { display: flex; gap: 12px; align-items: center; padding: 16px 6px; border-bottom: 1px solid var(--line); }
+.dot { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: none; background: #FBE5E3; color: var(--red); }
+.event .t { font-weight: 600; font-size: 15px; }
+.event .s { font-size: 13px; color: var(--muted); }
+.bubbles { padding: 14px 4px 0; display: grid; gap: 8px; }
+.bubble, .stamp { margin: 0; }
+.bubble { max-width: 86%; padding: 10px 13px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; }
+.bubble.out { justify-self: end; background: var(--blue); color: var(--white); border-bottom-right-radius: 5px; }
+.bubble.in { justify-self: start; background: #ECEEF2; border-bottom-left-radius: 5px; }
+.stamp { font-size: 12px; color: var(--muted); text-align: center; }
+.stamp b { color: var(--blue); }
+.seq { opacity: 0; transform: translateY(6px); animation: show .45s ease-out forwards; }
+.seq.d1 { animation-delay: .9s; } .seq.d2 { animation-delay: 1.5s; } .seq.d3 { animation-delay: 2.7s; } .seq.d4 { animation-delay: 3.8s; }
+@keyframes show { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .seq { animation: none; opacity: 1; transform: none; } html { scroll-behavior: auto; } }
 
-  /* Sections */
-  section.block { padding: 88px 0; }
-  h2 { font-weight: 800; font-variation-settings: "wdth" 72; font-size: clamp(32px, 4.4vw, 52px); line-height: 1; margin: 0 0 18px; }
-  .intro { max-width: 60ch; color: var(--muted); margin: 0 0 48px; font-size: 18px; }
+/* Sections */
+section.block { padding: 88px 0; }
+h2 { font-weight: 800; font-variation-settings: "wdth" 72; font-size: clamp(32px, 4.4vw, 52px); line-height: 1; margin: 0 0 18px; }
+.intro { max-width: 60ch; color: var(--muted); margin: 0 0 48px; font-size: 18px; }
 
-  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; counter-reset: step; }
-  .steps li { counter-increment: step; border-top: 3px solid var(--navy); padding-top: 20px; }
-  .steps li::before { content: counter(step); display: block; font-weight: 800; font-variation-settings: "wdth" 62; font-size: 56px; line-height: 1; color: var(--amber); -webkit-text-stroke: 1.5px var(--navy); margin-bottom: 12px; }
-  .steps h3 { margin: 0 0 8px; font-size: 21px; font-weight: 700; }
-  .steps p { margin: 0; color: var(--muted); max-width: 32ch; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; counter-reset: step; }
+.steps li { counter-increment: step; border-top: 3px solid var(--navy); padding-top: 20px; }
+.steps li::before { content: counter(step); display: block; font-weight: 800; font-variation-settings: "wdth" 62; font-size: 56px; line-height: 1; color: var(--amber); -webkit-text-stroke: 1.5px var(--navy); margin-bottom: 12px; }
+.steps h3 { margin: 0 0 8px; font-size: 21px; font-weight: 700; }
+.steps p { margin: 0; color: var(--muted); max-width: 32ch; }
 
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
-  .fit { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .fit .intro { margin-bottom: 28px; }
-  .trades { display: flex; flex-wrap: wrap; gap: 10px; }
-  .trades span { background: var(--paper); border: 1px solid var(--line); padding: 8px 15px; border-radius: 999px; font-size: 15px; font-weight: 600; }
-  .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
-  .checks li { padding-left: 34px; position: relative; }
-  .checks li::before { content: ""; position: absolute; left: 0; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: var(--navy); }
-  .checks li::after { content: ""; position: absolute; left: 6px; top: 9px; width: 8px; height: 5px; border-left: 2px solid var(--amber); border-bottom: 2px solid var(--amber); transform: rotate(-45deg); }
-  .checks b { display: block; }
-  .checks span { color: var(--muted); }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+.fit { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.fit .intro { margin-bottom: 28px; }
+.trades { display: flex; flex-wrap: wrap; gap: 10px; }
+.trades span { background: var(--paper); border: 1px solid var(--line); padding: 8px 15px; border-radius: 999px; font-size: 15px; font-weight: 600; }
+.checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+.checks li { padding-left: 34px; position: relative; }
+.checks li::before { content: ""; position: absolute; left: 0; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: var(--navy); }
+.checks li::after { content: ""; position: absolute; left: 6px; top: 9px; width: 8px; height: 5px; border-left: 2px solid var(--amber); border-bottom: 2px solid var(--amber); transform: rotate(-45deg); }
+.checks b { display: block; }
+.checks span { color: var(--muted); }
 
-  /* Form */
-  .demo { background: var(--navy); color: var(--white); }
-  .demo .intro { color: #C9D1E0; margin-bottom: 20px; }
-  .demo .alt { color: #C9D1E0; margin: 0; }
-  .demo .alt a { color: var(--amber); font-weight: 700; text-decoration: none; }
-  form { background: var(--white); color: var(--ink); border-radius: 16px; padding: 32px; display: grid; gap: 18px; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
-  label small { font-weight: 400; color: var(--muted); }
-  input, select, textarea {
-    font: inherit; font-size: 16px; color: var(--ink);
-    padding: 12px 14px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: var(--white); width: 100%;
-  }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(47,111,237,.2); }
-  textarea { min-height: 90px; resize: vertical; }
-  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  form .btn { justify-self: start; }
-  form .btn[disabled] { opacity: .6; cursor: wait; }
-  .msg { margin: 0; padding: 12px 14px; border-radius: var(--radius-sm); font-size: 15px; display: none; }
-  .msg.ok { display: block; background: #E6F4EA; color: #1D5E33; }
-  .msg.err { display: block; background: #FBE5E3; color: #8E2A22; }
-  .fine { font-size: 13px; color: var(--muted); margin: 0; }
+/* Form */
+.demo { background: var(--navy); color: var(--white); }
+.demo .intro { color: #C9D1E0; margin-bottom: 20px; }
+.demo .alt { color: #C9D1E0; margin: 0; }
+.demo .alt a { color: var(--amber); font-weight: 700; text-decoration: none; }
+form { background: var(--white); color: var(--ink); border-radius: 16px; padding: 32px; display: grid; gap: 18px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+label small { font-weight: 400; color: var(--muted); }
+input, select, textarea {
+font: inherit; font-size: 16px; color: var(--ink);
+padding: 12px 14px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: var(--white); width: 100%;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(47,111,237,.2); }
+textarea { min-height: 90px; resize: vertical; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+form .btn { justify-self: start; }
+form .btn[disabled] { opacity: .6; cursor: wait; }
+.msg { margin: 0; padding: 12px 14px; border-radius: var(--radius-sm); font-size: 15px; display: none; }
+.msg.ok { display: block; background: #E6F4EA; color: #1D5E33; }
+.msg.err { display: block; background: #FBE5E3; color: #8E2A22; }
+.fine { font-size: 13px; color: var(--muted); margin: 0; }
 
-  footer { padding: 32px 0; font-size: 14px; color: var(--muted); }
-  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+/* Consent checkbox */
+.consent-row { display: flex; align-items: flex-start; gap: 12px; }
+.consent-row input[type="checkbox"] {
+width: 20px; height: 20px; min-width: 20px; padding: 0;
+margin-top: 2px; cursor: pointer;
+accent-color: var(--navy);
+}
+.consent-row .consent-text {
+font-size: 13px; font-weight: 400; color: var(--muted); line-height: 1.5;
+display: block; cursor: pointer;
+}
+.consent-row .consent-text a { color: var(--blue); text-decoration: underline; }
 
-  @media (max-width: 860px) {
-    .hero .wrap, .split { grid-template-columns: 1fr; gap: 44px; }
-    .steps { grid-template-columns: 1fr; gap: 32px; }
-    .hero { padding: 40px 0 64px; }
-    section.block { padding: 64px 0; }
-  }
-  @media (max-width: 560px) {
-    .row { grid-template-columns: 1fr; }
-    form { padding: 22px; }
-    .top a.call { padding: 8px 12px; font-size: 14px; }
-  }
+footer { padding: 32px 0; font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+footer a { text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 860px) {
+.hero .wrap, .split { grid-template-columns: 1fr; gap: 44px; }
+.steps { grid-template-columns: 1fr; gap: 32px; }
+.hero { padding: 40px 0 64px; }
+section.block { padding: 64px 0; }
+}
+@media (max-width: 560px) {
+.row { grid-template-columns: 1fr; }
+form { padding: 22px; }
+.top a.call { padding: 8px 12px; font-size: 14px; }
+}
 </style>
 </head>
 <body>
 
 <header class="top">
-  <div class="wrap">
-    <a class="brand" href="/">Sac <span>AI</span> Receptionist</a>
-    <a class="call" href="tel:+19163138648">(916) 313-8648</a>
-  </div>
+<div class="wrap">
+<a class="brand" href="/">Sac <span>AI</span> Receptionist</a>
+<a class="call" href="tel:+19163138648">(916) 313-8648</a>
+</div>
 </header>
 
 <main>
-  <section class="hero">
-    <div class="wrap">
-      <div>
-        <h1>Every missed call could be a lost customer.</h1>
-        <p class="lede">When you're under a sink, up on a roof, or driving between jobs, callers get a text back in seconds and an AI receptionist books the job for you.</p>
-        <a class="btn" href="#demo">Start your 14-day free trial</a>
-        <p class="note">Built for Sacramento-area service businesses. No contract.</p>
-        <p class="try">Try it now: call <a href="tel:+19163138648">(916) 313-8648</a>, let it ring out, and watch your phone for the text.</p>
-      </div>
+<section class="hero">
+<div class="wrap">
+<div>
+<h1>Every missed call could be a lost customer.</h1>
+<p class="lede">When you're under a sink, up on a roof, or driving between jobs, callers get a text back in seconds and an AI receptionist books the job for you.</p>
+<a class="btn" href="#demo">Start your 14-day free trial</a>
+<p class="note">Built for Sacramento-area service businesses. No contract.</p>
+<p class="try">Try it now: call <a href="tel:+19163138648">(916) 313-8648</a>, let it ring out, and watch your phone for the text.</p>
+</div>
 
-      <div class="phone" aria-label="Example: a missed call answered by an automatic text">
-        <div class="bar"><span>Your business line</span><b>2:14 PM</b></div>
-        <div class="event">
-          <div class="dot" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/><line x1="17" y1="2" x2="22" y2="7"/><line x1="22" y1="2" x2="17" y2="7"/></svg>
-          </div>
-          <div><div class="t">Missed call</div><div class="s">(916) 555-0147, rang 20 seconds</div></div>
-        </div>
-        <div class="bubbles">
-          <p class="stamp seq d1">Texted back in <b>8 seconds</b></p>
-          <p class="bubble out seq d2">Sorry we missed you! This is Valley Plumbing. What's going on, and is it urgent?</p>
-          <p class="bubble in seq d3">Water heater is leaking in the garage</p>
-          <p class="bubble out seq d4">We can be there today between 3 and 5 PM. Want me to book it?</p>
-        </div>
-      </div>
-    </div>
-  </section>
+<div class="phone" aria-label="Example: a missed call answered by an automatic text">
+<div class="bar"><span>Your business line</span><b>2:14 PM</b></div>
+<div class="event">
+<div class="dot" aria-hidden="true">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/><line x1="17" y1="2" x2="22" y2="7"/><line x1="22" y1="2" x2="17" y2="7"/></svg>
+</div>
+<div><div class="t">Missed call</div><div class="s">(916) 555-0147, rang 20 seconds</div></div>
+</div>
+<div class="bubbles">
+<p class="stamp seq d1">Texted back in <b>8 seconds</b></p>
+<p class="bubble out seq d2">Sorry we missed you! This is Valley Plumbing. What's going on, and is it urgent?</p>
+<p class="bubble in seq d3">Water heater is leaking in the garage</p>
+<p class="bubble out seq d4">We can be there today between 3 and 5 PM. Want me to book it?</p>
+</div>
+</div>
+</div>
+</section>
 
-  <section class="block">
-    <div class="wrap">
-      <h2>How it works</h2>
-      <p class="intro">You keep your current phone number. The system only steps in when a call goes unanswered.</p>
-      <ol class="steps">
-        <li><h3>A call goes unanswered</h3><p>Your phone rings like normal. If you can't pick up, the system catches it.</p></li>
-        <li><h3>The caller gets a text right away</h3><p>Within seconds they hear from your business instead of calling the next shop on Google.</p></li>
-        <li><h3>The job gets booked</h3><p>The AI receptionist asks what's wrong, offers open times, and texts you the details.</p></li>
-      </ol>
-    </div>
-  </section>
+<section class="block">
+<div class="wrap">
+<h2>How it works</h2>
+<p class="intro">You keep your current phone number. The system only steps in when a call goes unanswered.</p>
+<ol class="steps">
+<li><h3>A call goes unanswered</h3><p>Your phone rings like normal. If you can't pick up, the system catches it.</p></li>
+<li><h3>The caller gets a text right away</h3><p>Within seconds they hear from your business instead of calling the next shop on Google.</p></li>
+<li><h3>The job gets booked</h3><p>The AI receptionist asks what's wrong, offers open times, and texts you the details.</p></li>
+</ol>
+</div>
+</section>
 
-  <section class="block fit">
-    <div class="wrap split">
-      <div>
-        <h2>Made for busy local businesses</h2>
-        <p class="intro">Most customers call the next company if nobody answers. A fast reply keeps that job yours.</p>
-        <div class="trades">
-          <span>HVAC</span><span>Plumbing</span><span>Electrical</span><span>Roofing</span>
-          <span>Auto repair</span><span>Restaurants</span><span>Retail</span><span>Professional services</span>
-        </div>
-      </div>
-      <ul class="checks">
-        <li><b>Works with your existing number</b><span>No new phone, no app to learn.</span></li>
-        <li><b>Answers nights and weekends</b><span>A call at 9 PM still gets a reply.</span></li>
-        <li><b>You stay in control</b><span>Reply to any customer straight from your own phone.</span></li>
-        <li><b>Local setup and support</b><span>Set up by a Sacramento developer you can actually reach.</span></li>
-        <li><b>Free for 14 days</b><span>Try it on your real calls. No contract, cancel anytime.</span></li>
-      </ul>
-    </div>
-  </section>
+<section class="block fit">
+<div class="wrap split">
+<div>
+<h2>Made for busy local businesses</h2>
+<p class="intro">Most customers call the next company if nobody answers. A fast reply keeps that job yours.</p>
+<div class="trades">
+<span>HVAC</span><span>Plumbing</span><span>Electrical</span><span>Roofing</span>
+<span>Auto repair</span><span>Restaurants</span><span>Retail</span><span>Professional services</span>
+</div>
+</div>
+<ul class="checks">
+<li><b>Works with your existing number</b><span>No new phone, no app to learn.</span></li>
+<li><b>Answers nights and weekends</b><span>A call at 9 PM still gets a reply.</span></li>
+<li><b>You stay in control</b><span>Reply to any customer straight from your own phone.</span></li>
+<li><b>Local setup and support</b><span>Set up by a Sacramento developer you can actually reach.</span></li>
+<li><b>Free for 14 days</b><span>Try it on your real calls. No contract, cancel anytime.</span></li>
+</ul>
+</div>
+</section>
 
-  <section class="block demo" id="demo">
-    <div class="wrap split">
-      <div>
-        <h2>Start your 14-day free trial</h2>
-        <p class="intro">Tell me a little about your business. I'll reach out within one business day to set it up on your number. No cost and no commitment.</p>
-        <p class="alt">Prefer to talk? Call or text <a href="tel:+19163138648">(916) 313-8648</a>.</p>
-      </div>
+<section class="block demo" id="demo">
+<div class="wrap split">
+<div>
+<h2>Start your 14-day free trial</h2>
+<p class="intro">Tell me a little about your business. I'll reach out within one business day to set it up on your number. No cost and no commitment.</p>
+<p class="alt">Prefer to talk? Call or text <a href="tel:+19163138648">(916) 313-8648</a>.</p>
+</div>
 
-      <form id="demo-form" action="/demo-request" method="post" novalidate>
-        <div class="row">
-          <label>Your name
-            <input name="name" autocomplete="name" required maxlength="80">
-          </label>
-          <label>Business name
-            <input name="business" autocomplete="organization" required maxlength="120">
-          </label>
-        </div>
-        <div class="row">
-          <label>Phone
-            <input name="phone" type="tel" autocomplete="tel" required maxlength="25" placeholder="(916) 555-0123">
-          </label>
-          <label>Email <small>(optional)</small>
-            <input name="email" type="email" autocomplete="email" maxlength="120">
-          </label>
-        </div>
-        <div class="row">
-          <label>Your business type
-            <select name="trade" required>
-              <option value="">Choose one</option>
-              <option>HVAC</option>
-              <option>Plumbing</option>
-              <option>Electrical</option>
-              <option>Roofing</option>
-              <option>Auto repair</option>
-              <option>Restaurant</option>
-              <option>Retail</option>
-              <option>Professional services</option>
-              <option>Other</option>
-            </select>
-          </label>
-          <label>Missed calls per week <small>(rough guess)</small>
-            <select name="missedCalls">
-              <option value="">Not sure</option>
-              <option>1 to 5</option>
-              <option>6 to 15</option>
-              <option>16 or more</option>
-            </select>
-          </label>
-        </div>
-        <label>Anything else? <small>(optional)</small>
-          <textarea name="notes" maxlength="1000"></textarea>
-        </label>
-        <div class="hp" aria-hidden="true">
-          <label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
-        </div>
-        <p class="msg" id="form-msg" role="status" aria-live="polite"></p>
-        <button class="btn" type="submit">Request my free trial</button>
-        <p class="fine">Your details are only used to contact you about your trial.</p>
-      </form>
-    </div>
-  </section>
+<form id="demo-form" action="/demo-request" method="post" novalidate>
+<div class="row">
+<label>Your name
+<input name="name" autocomplete="name" required maxlength="80">
+</label>
+<label>Business name
+<input name="business" autocomplete="organization" required maxlength="120">
+</label>
+</div>
+<div class="row">
+<label>Phone
+<input name="phone" type="tel" autocomplete="tel" required maxlength="25" placeholder="(916) 555-0123">
+</label>
+<label>Email <small>(optional)</small>
+<input name="email" type="email" autocomplete="email" maxlength="120">
+</label>
+</div>
+<div class="row">
+<label>Your business type
+<select name="trade" required>
+<option value="">Choose one</option>
+<option>HVAC</option>
+<option>Plumbing</option>
+<option>Electrical</option>
+<option>Roofing</option>
+<option>Auto repair</option>
+<option>Restaurant</option>
+<option>Retail</option>
+<option>Professional services</option>
+<option>Other</option>
+</select>
+</label>
+<label>Missed calls per week <small>(rough guess)</small>
+<select name="missedCalls">
+<option value="">Not sure</option>
+<option>1 to 5</option>
+<option>6 to 15</option>
+<option>16 or more</option>
+</select>
+</label>
+</div>
+<label>Anything else? <small>(optional)</small>
+<textarea name="notes" maxlength="1000"></textarea>
+</label>
+
+<!-- SMS Consent -->
+<div class="consent-row">
+<input type="checkbox" id="sms-consent" name="smsConsent" value="yes" required>
+<label for="sms-consent" class="consent-text">
+By checking this box, I agree to receive text messages from Sac AI Receptionist at the phone number provided above. Messages may include a reply confirming receipt of this request and follow-up about setting up your trial. Message frequency varies. Message &amp; data rates may apply. Reply <strong>STOP</strong> to opt out at any time. Reply <strong>HELP</strong> for help. See our <a href="/privacy.html" target="_blank">Privacy Policy</a> for details.
+</label>
+</div>
+
+<div class="hp" aria-hidden="true">
+<label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
+</div>
+<p class="msg" id="form-msg" role="status" aria-live="polite"></p>
+<button class="btn" type="submit">Request my free trial</button>
+<p class="fine">Your details are only used to contact you about your trial. See our <a href="/privacy.html" style="color:var(--blue);text-decoration:underline;">Privacy Policy</a>.</p>
+</form>
+</div>
+</section>
 </main>
 
 <footer>
-  <div class="wrap">
-    <span>&copy; 2026 Sac AI Receptionist, Sacramento, CA</span>
-    <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>
-  </div>
+<div class="wrap">
+<span>&copy; 2026 Sac AI Receptionist, Sacramento, CA</span>
+<span style="display:flex;gap:20px;">
+<a href="/privacy.html">Privacy Policy</a>
+<a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>
+</span>
+</div>
 </footer>
 
 <script>
 (function () {
-  var form = document.getElementById('demo-form');
-  var msg = document.getElementById('form-msg');
-  var btn = form.querySelector('button[type=submit]');
-  var label = 'Request my free trial';
+var form = document.getElementById('demo-form');
+var msg = document.getElementById('form-msg');
+var btn = form.querySelector('button[type=submit]');
+var label = 'Request my free trial';
 
-  function show(type, text) { msg.className = 'msg ' + type; msg.textContent = text; }
+function show(type, text) { msg.className = 'msg ' + type; msg.textContent = text; }
 
-  if (location.search.indexOf('sent=1') !== -1) show('ok', "Request sent. I'll reach out within one business day.");
+if (location.search.indexOf('sent=1') !== -1) show('ok', "Request sent. I'll reach out within one business day.");
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var data = new FormData(form);
-    var missing = [];
-    if (!String(data.get('name')).trim()) missing.push('your name');
-    if (!String(data.get('business')).trim()) missing.push('business name');
-    if (String(data.get('phone')).replace(/\D/g, '').length < 10) missing.push('a 10-digit phone number');
-    if (!data.get('trade')) missing.push('your business type');
-    if (missing.length) { show('err', 'Please add ' + missing.join(', ') + '.'); return; }
+form.addEventListener('submit', function (e) {
+e.preventDefault();
+var data = new FormData(form);
+var missing = [];
+if (!String(data.get('name')).trim()) missing.push('your name');
+if (!String(data.get('business')).trim()) missing.push('business name');
+if (String(data.get('phone')).replace(/\D/g, '').length < 10) missing.push('a 10-digit phone number');
+if (!data.get('trade')) missing.push('your business type');
+if (!data.get('smsConsent')) missing.push('SMS consent (the checkbox above)');
+if (missing.length) { show('err', 'Please provide ' + missing.join(', ') + '.'); return; }
 
-    btn.disabled = true; btn.textContent = 'Sending...';
-    fetch('/demo-request', {
-      method: 'POST',
-      headers: { 'Accept': 'application/json' },
-      body: new URLSearchParams(data)
-    })
-      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
-      .then(function (res) {
-        if (res.ok) { form.reset(); show('ok', "Request sent. I'll reach out within one business day."); }
-        else show('err', res.body.error || 'The request did not go through. Try again in a minute.');
-      })
-      .catch(function () { show('err', 'Could not reach the server. Check your connection and try again.'); })
-      .then(function () { btn.disabled = false; btn.textContent = label; });
-  });
+btn.disabled = true; btn.textContent = 'Sending...';
+fetch('/demo-request', {
+method: 'POST',
+headers: { 'Accept': 'application/json' },
+body: new URLSearchParams(data)
+})
+.then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+.then(function (res) {
+if (res.ok) { form.reset(); show('ok', "Request sent. I'll reach out within one business day."); }
+else show('err', res.body.error || 'The request did not go through. Try again in a minute.');
+})
+.catch(function () { show('err', 'Could not reach the server. Check your connection and try again.'); })
+.then(function () { btn.disabled = false; btn.textContent = label; });
+});
 })();
 </script>
 </body>
