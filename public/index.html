@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Never lose a job to a missed call | Sacramento plumbing & HVAC</title>
-<meta name="description" content="When you can't pick up, missed callers get a text back in seconds and an AI receptionist books the job. Built for Sacramento plumbing and HVAC businesses.">
+<title>Sac AI Receptionist | Never lose a job to a missed call</title>
+<meta name="description" content="When you can't pick up, missed callers get a text back in seconds and an AI receptionist books the job. Built for Sacramento service businesses. Try it free for 14 days.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     --radius-sm: 8px;
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
     margin: 0;
     font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
@@ -66,6 +66,12 @@
   }
   .btn:hover { background: #F6C463; }
   .hero .note { margin-top: 16px; font-size: 14px; color: #93A0B8; }
+  .try {
+    margin-top: 28px; padding: 14px 16px; max-width: 34ch;
+    border: 1.5px dashed rgba(255,255,255,.3); border-radius: var(--radius-sm);
+    font-size: 15px; color: #C9D1E0;
+  }
+  .try a { color: var(--amber); font-weight: 700; text-decoration: none; white-space: nowrap; }
 
   /* Phone */
   .phone {
@@ -88,11 +94,10 @@
   .bubble.in { justify-self: start; background: #ECEEF2; border-bottom-left-radius: 5px; }
   .stamp { font-size: 12px; color: var(--muted); text-align: center; }
   .stamp b { color: var(--blue); }
-  /* One orchestrated reveal: the text-back conversation */
   .seq { opacity: 0; transform: translateY(6px); animation: show .45s ease-out forwards; }
   .seq.d1 { animation-delay: .9s; } .seq.d2 { animation-delay: 1.5s; } .seq.d3 { animation-delay: 2.7s; } .seq.d4 { animation-delay: 3.8s; }
   @keyframes show { to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { .seq { animation: none; opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .seq { animation: none; opacity: 1; transform: none; } html { scroll-behavior: auto; } }
 
   /* Sections */
   section.block { padding: 88px 0; }
@@ -107,6 +112,9 @@
 
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
   .fit { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .fit .intro { margin-bottom: 28px; }
+  .trades { display: flex; flex-wrap: wrap; gap: 10px; }
+  .trades span { background: var(--paper); border: 1px solid var(--line); padding: 8px 15px; border-radius: 999px; font-size: 15px; font-weight: 600; }
   .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
   .checks li { padding-left: 34px; position: relative; }
   .checks li::before { content: ""; position: absolute; left: 0; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: var(--navy); }
@@ -116,7 +124,9 @@
 
   /* Form */
   .demo { background: var(--navy); color: var(--white); }
-  .demo .intro { color: #C9D1E0; }
+  .demo .intro { color: #C9D1E0; margin-bottom: 20px; }
+  .demo .alt { color: #C9D1E0; margin: 0; }
+  .demo .alt a { color: var(--amber); font-weight: 700; text-decoration: none; }
   form { background: var(--white); color: var(--ink); border-radius: 16px; padding: 32px; display: grid; gap: 18px; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
@@ -147,7 +157,7 @@
   @media (max-width: 560px) {
     .row { grid-template-columns: 1fr; }
     form { padding: 22px; }
-    .top a.call { display: none; }
+    .top a.call { padding: 8px 12px; font-size: 14px; }
   }
 </style>
 </head>
@@ -155,8 +165,8 @@
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="/">Missed<span>Call</span> Text-Back</a>
-    <a class="call" href="#demo">Request a demo</a>
+    <a class="brand" href="/">Sac <span>AI</span> Receptionist</a>
+    <a class="call" href="tel:+19163138648">(916) 313-8648</a>
   </div>
 </header>
 
@@ -165,9 +175,10 @@
     <div class="wrap">
       <div>
         <h1>Every missed call could be a lost customer.</h1>
-        <p class="lede">When you're under a sink or up in an attic, callers get a text back in seconds and an AI receptionist books the job for you.</p>
-        <a class="btn" href="#demo">Request a free demo</a>
-        <p class="note">Built for plumbing and HVAC shops in the Sacramento area.</p>
+        <p class="lede">When you're under a sink, up on a roof, or driving between jobs, callers get a text back in seconds and an AI receptionist books the job for you.</p>
+        <a class="btn" href="#demo">Start your 14-day free trial</a>
+        <p class="note">Built for Sacramento-area service businesses. No contract.</p>
+        <p class="try">Try it now: call <a href="tel:+19163138648">(916) 313-8648</a>, let it ring out, and watch your phone for the text.</p>
       </div>
 
       <div class="phone" aria-label="Example: a missed call answered by an automatic text">
@@ -191,7 +202,7 @@
   <section class="block">
     <div class="wrap">
       <h2>How it works</h2>
-      <p class="intro">You keep your current phone number habits. The system only steps in when a call goes unanswered.</p>
+      <p class="intro">You keep your current phone number. The system only steps in when a call goes unanswered.</p>
       <ol class="steps">
         <li><h3>A call goes unanswered</h3><p>Your phone rings like normal. If you can't pick up, the system catches it.</p></li>
         <li><h3>The caller gets a text right away</h3><p>Within seconds they hear from your business instead of calling the next shop on Google.</p></li>
@@ -203,14 +214,19 @@
   <section class="block fit">
     <div class="wrap split">
       <div>
-        <h2>Made for the way trades work</h2>
-        <p class="intro">Most homeowners with a burst pipe or a dead AC call the next company if nobody answers. A fast reply keeps that job yours.</p>
+        <h2>Made for busy local businesses</h2>
+        <p class="intro">Most customers call the next company if nobody answers. A fast reply keeps that job yours.</p>
+        <div class="trades">
+          <span>HVAC</span><span>Plumbing</span><span>Electrical</span><span>Roofing</span>
+          <span>Auto repair</span><span>Restaurants</span><span>Retail</span><span>Professional services</span>
+        </div>
       </div>
       <ul class="checks">
         <li><b>Works with your existing number</b><span>No new phone, no app to learn.</span></li>
-        <li><b>Answers nights and weekends</b><span>Emergency calls at 9 PM still get a reply.</span></li>
+        <li><b>Answers nights and weekends</b><span>A call at 9 PM still gets a reply.</span></li>
         <li><b>You stay in control</b><span>Reply to any customer straight from your own phone.</span></li>
         <li><b>Local setup and support</b><span>Set up by a Sacramento developer you can actually reach.</span></li>
+        <li><b>Free for 14 days</b><span>Try it on your real calls. No contract, cancel anytime.</span></li>
       </ul>
     </div>
   </section>
@@ -218,8 +234,9 @@
   <section class="block demo" id="demo">
     <div class="wrap split">
       <div>
-        <h2>See it on your own business line</h2>
-        <p class="intro">Tell me a little about your shop. I'll reach out within one business day to set up a short demo. No cost and no commitment.</p>
+        <h2>Start your 14-day free trial</h2>
+        <p class="intro">Tell me a little about your business. I'll reach out within one business day to set it up on your number. No cost and no commitment.</p>
+        <p class="alt">Prefer to talk? Call or text <a href="tel:+19163138648">(916) 313-8648</a>.</p>
       </div>
 
       <form id="demo-form" action="/demo-request" method="post" novalidate>
@@ -240,13 +257,18 @@
           </label>
         </div>
         <div class="row">
-          <label>Your trade
+          <label>Your business type
             <select name="trade" required>
               <option value="">Choose one</option>
-              <option>Plumbing</option>
               <option>HVAC</option>
-              <option>Plumbing and HVAC</option>
-              <option>Other home service</option>
+              <option>Plumbing</option>
+              <option>Electrical</option>
+              <option>Roofing</option>
+              <option>Auto repair</option>
+              <option>Restaurant</option>
+              <option>Retail</option>
+              <option>Professional services</option>
+              <option>Other</option>
             </select>
           </label>
           <label>Missed calls per week <small>(rough guess)</small>
@@ -265,8 +287,8 @@
           <label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label>
         </div>
         <p class="msg" id="form-msg" role="status" aria-live="polite"></p>
-        <button class="btn" type="submit">Request my demo</button>
-        <p class="fine">Your details are only used to contact you about this demo.</p>
+        <button class="btn" type="submit">Request my free trial</button>
+        <p class="fine">Your details are only used to contact you about your trial.</p>
       </form>
     </div>
   </section>
@@ -274,7 +296,7 @@
 
 <footer>
   <div class="wrap">
-    <span>Missed-Call Text-Back, Sacramento, CA</span>
+    <span>&copy; 2026 Sac AI Receptionist, Sacramento, CA</span>
     <a href="mailto:wahmed07860786@gmail.com">wahmed07860786@gmail.com</a>
   </div>
 </footer>
@@ -284,6 +306,7 @@
   var form = document.getElementById('demo-form');
   var msg = document.getElementById('form-msg');
   var btn = form.querySelector('button[type=submit]');
+  var label = 'Request my free trial';
 
   function show(type, text) { msg.className = 'msg ' + type; msg.textContent = text; }
 
@@ -296,7 +319,7 @@
     if (!String(data.get('name')).trim()) missing.push('your name');
     if (!String(data.get('business')).trim()) missing.push('business name');
     if (String(data.get('phone')).replace(/\D/g, '').length < 10) missing.push('a 10-digit phone number');
-    if (!data.get('trade')) missing.push('your trade');
+    if (!data.get('trade')) missing.push('your business type');
     if (missing.length) { show('err', 'Please add ' + missing.join(', ') + '.'); return; }
 
     btn.disabled = true; btn.textContent = 'Sending...';
@@ -311,7 +334,7 @@
         else show('err', res.body.error || 'The request did not go through. Try again in a minute.');
       })
       .catch(function () { show('err', 'Could not reach the server. Check your connection and try again.'); })
-      .then(function () { btn.disabled = false; btn.textContent = 'Request my demo'; });
+      .then(function () { btn.disabled = false; btn.textContent = label; });
   });
 })();
 </script>
